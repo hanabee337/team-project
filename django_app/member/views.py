@@ -63,7 +63,8 @@ def login_instagram(request):
         print(r)
         dict_access_token = r.json()
         pprint(dict_access_token)
-        USER_ID = dict_access_token['user']['id']
+        # USER_ID = dict_access_token['user']['id']
+        USER_ID = dict_access_token['user']['username']
         print('USER_ID : %s' % USER_ID)
 
         defaults = {
