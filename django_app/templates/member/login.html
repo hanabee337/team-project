@@ -2,5 +2,6 @@
 
 {% block content %}
     <h1>LogIn Page</h1>
-    <a href="">Deezer로 로그인</a>
+    <!--php로 되어 있어서 불가(?)-->
+    <a href="https://connect.deezer.com/oauth/auth.php?app_id={{ deezer_app_id }}&redirect_uri=http://localhost:8000/member/login/deezer">Deezer로 로그인</a>
 {% endblock %}
