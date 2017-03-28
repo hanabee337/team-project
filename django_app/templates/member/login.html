@@ -2,6 +2,9 @@
 
 {% block content %}
     <h1>LogIn Page</h1>
-    <!--php로 되어 있어서 불가(?)-->
-    <a href="https://connect.deezer.com/oauth/auth.php?app_id={{ deezer_app_id }}&redirect_uri=http://localhost:8000/member/login/deezer">Deezer로 로그인</a>
+    <!--deezer : php로 되어 있어서 불가(?)-->
+    <!--<a href="https://connect.deezer.com/oauth/auth.php?app_id={{ deezer_app_id }}&redirect_uri=http://localhost:8000/member/login/deezer/">Deezer로 로그인</a>-->
+
+    <a href="https://api.instagram.com/oauth/authorize/?client_id={{ instagram_client_id }}&redirect_uri=http://localhost:8000/member/login/instagram&response_type=code">Instagram으로 로그인</a>
+
 {% endblock %}

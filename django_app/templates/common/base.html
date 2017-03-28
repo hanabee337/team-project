@@ -5,10 +5,18 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Deezer</title>
+    <title>Instagram Login</title>
 </head>
 <body>
-
+    <div>
+        {% if user.is_authenticated %}
+            <p>{{ user.username }}님이 로그인 되었다</p>
+            <p>{{ user }}님이 로그인 되었다</p>
+            <a href="{% url 'member:logout' %}">로그아웃</a>
+        {% else %}
+            <a href="{% url 'member:login' %}">로그인 할래?</a>
+        {% endif %}
+    </div>
 {% block content %}
 {% endblock %}
 </body>
