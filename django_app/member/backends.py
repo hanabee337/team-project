@@ -1,7 +1,7 @@
 from .models import MyUser
 
 
-class InstagramBackend():
+class InstagramBackend(object):
     def authenticate(self, instagram_id, extra_fields):
 
         print('extra_fields:{}'.format(extra_fields))
@@ -30,7 +30,7 @@ class InstagramBackend():
 # 2. 추가 정보가 꼭 있어야 된다고하면(가령, 핸펀 번호 등),
 # 사용자 정보를 받고나서, 회원가입화면으로 다시 가서
 # authentication 을 하는 루틴
-class FacebookBackend():
+class FacebookBackend(object):
     # facebook_id가 주어졌을 때, 해당 user가 있으면 가져오고,
     # 없으면 user를 만들어서 return 해 주는 인증 과정을 구현한 상태.
     def authenticate(self, facebook_id, extra_fields):

@@ -7,6 +7,8 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 from deezer.settings import config
+from member.forms import SignupForm, LoginForm
+from member.models import MyUser
 
 
 def login_fbv(request):
@@ -169,3 +171,75 @@ def login_facebook(request):
         user = authenticate(facebook_id=USER_NAME, extra_fields=dict_user_info)
         login(request, user)
         return redirect('index')
+
+
+def signup_fbv(request):
+    """
+    회원 가입 구현
+    1. member/signup.html 파일 생성\
+    2. SignupForm 클래스 구현
+    3. 해당 Form을 사용해서 signup.html템플릿 구현
+    4. POST요청을 받아 MyUser객체 생성
+    5. 로그인 완료되면 post_list 뷰로 이동
+    """
+    if request.method == 'POST':
+        form = SignupForm(data=request.POST)
+
+        if form.is_valid():
+            print('form.cleaned_data:{}'.format(form.cleaned_data))
+
+            username = form.cleaned_data['username']
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password2']
+            gender = form.cleaned_data['gender']
+            age = form.cleaned_data['age']
+
+            user = MyUser.objects.create_user(
+                username=username,
+                email=email,
+                password=password,
+            )
+            user.gender = gender
+            user.age = age
+            user.save()
+
+            print('user1:{}'.format(user))
+
+            user = authenticate(
+                username=username,
+                password=password
+            )
+            print('user2:{}'.format(user))
+
+            login(request=request, user=user)
+
+            return redirect('index')
+    else:
+        form = SignupForm()
+
+    context = {
+        'form': form,
+    }
+    return render(request, 'member/signup.html', context)
+
+
+def login_itself(request):
+    if request.method == 'POST':
+        # return HttpResponse('login_itself POST view')
+
+        form = LoginForm(data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(username=username, password=password)
+            login(request, user)
+            return redirect('index')
+    else:
+        # return HttpResponse('login_itself GET view')
+
+        form = LoginForm()
+
+    context = {
+        'form': form,
+    }
+    return render(request, 'member/login_itself.html', context)

@@ -8,7 +8,12 @@
             <p>{{ user }}님이 로그인 되었다</p>
             <a href="{% url 'member:logout' %}">로그아웃</a>
         {% else %}
-            <a href="{% url 'member:login' %}">로그인 할래?</a>
+            <div>
+                <a href="{% url 'member:login' %}">로그인 할래?</a>
+            </div>
+            <div>
+                <a href="{% url 'member:signup' %}">회원 가입할래?</a>
+            </div>
         {% endif %}
     </div>
 {% endblock %}

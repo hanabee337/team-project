@@ -1,0 +1,16 @@
+{% extends 'common/base.html' %}
+
+{% block content %}
+<div class="login-itself-container">
+    <form action="" method="POST">{% csrf_token %}
+        {% for field in form %}
+            <div class="field-container">
+                {{ field.label_tag }} {{ field }}
+            </div>
+        {% endfor %}
+        <div class="button-container">
+            <button type="submit">자체 회원 로그인</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
