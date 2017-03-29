@@ -8,15 +8,15 @@
     <title>Instagram Login</title>
 </head>
 <body>
-    <div>
-        {% if user.is_authenticated %}
-            <!--<p>{{ user.username }}님이 로그인 되었다</p>-->
-            <p>{{ user }}님이 로그인 되었다</p>
-            <a href="{% url 'member:logout' %}">로그아웃</a>
-        {% else %}
-            <a href="{% url 'member:login' %}">로그인 할래?</a>
-        {% endif %}
-    </div>
+    <!--<div>-->
+        <!--{% if user.is_authenticated %}-->
+            <!--&lt;!&ndash;<p>{{ user.username }}님이 로그인 되었다</p>&ndash;&gt;-->
+            <!--<p>{{ user }}님이 로그인 되었다</p>-->
+            <!--<a href="{% url 'member:logout' %}">로그아웃</a>-->
+        <!--{% else %}-->
+            <!--<a href="{% url 'member:login' %}">로그인 할래?</a>-->
+        <!--{% endif %}-->
+    <!--</div>-->
 {% block content %}
 {% endblock %}
 </body>

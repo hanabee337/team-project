@@ -2,4 +2,13 @@
 
 {% block content %}
     <h1>Index Page</h1>
+    <div>
+        {% if user.is_authenticated %}
+            <!--<p>{{ user.username }}님이 로그인 되었다</p>-->
+            <p>{{ user }}님이 로그인 되었다</p>
+            <a href="{% url 'member:logout' %}">로그아웃</a>
+        {% else %}
+            <a href="{% url 'member:login' %}">로그인 할래?</a>
+        {% endif %}
+    </div>
 {% endblock %}
