@@ -159,9 +159,13 @@ def login_facebook(request):
         dict_user_info = r.json()
         pprint(dict_user_info)
 
+        first_name = dict_user_info['first_name']
+        last_name = dict_user_info['last_name']
+        USER_NAME = last_name + ' ' + first_name
+
         # 페이스북 유저 ID만으로 인증
         # user = authenticate(facebook_id=USER_ID)
         # 페이스북 유저 ID와 graph API에 요청한 dict_user_info로 인증
-        user = authenticate(facebook_id=USER_ID, extra_fields=dict_user_info)
+        user = authenticate(facebook_id=USER_NAME, extra_fields=dict_user_info)
         login(request, user)
         return redirect('index')
