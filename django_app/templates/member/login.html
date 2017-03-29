@@ -4,7 +4,10 @@
     <h1>LogIn Page</h1>
     <!--deezer : php로 되어 있어서 불가(?)-->
     <!--<a href="https://connect.deezer.com/oauth/auth.php?app_id={{ deezer_app_id }}&redirect_uri=http://localhost:8000/member/login/deezer/">Deezer로 로그인</a>-->
-
-    <a href="https://api.instagram.com/oauth/authorize/?client_id={{ instagram_client_id }}&redirect_uri=http://localhost:8000/member/login/instagram&response_type=code">Instagram으로 로그인</a>
-
+    <div>
+        <a href="https://api.instagram.com/oauth/authorize/?client_id={{ instagram_client_id }}&redirect_uri=http://localhost:8000/member/login/instagram&response_type=code">Instagram으로 로그인</a>
+    </div>
+    <div>
+        <a href="https://www.facebook.com/v2.8/dialog/oauth?client_id={{ facebook_app_id }}&redirect_uri=http://localhost:8000/member/login/facebook/">페이스북으로 로그인</a>
+    </div>
 {% endblock %}

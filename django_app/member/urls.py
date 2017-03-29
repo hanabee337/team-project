@@ -8,6 +8,6 @@ urlpatterns = [
     url(r'^logout/$', views.logout_fbv, name='logout'),
 
     url(r'^login/deezer/$', views.login_deezer, name='login_deezer'),
-
+    url(r'^login/facebook/$', views.login_facebook, name='login_facebook'),
     url(r'^login/instagram/$', views.login_instagram, name='login_instagram'),
 ]
