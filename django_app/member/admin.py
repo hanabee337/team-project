@@ -18,6 +18,6 @@ class MyUserAdmin(UserAdmin):
     )
 
     list_display = ('username', 'email',)
-
+    list_filter = ('is_staff',)
 
 admin.site.register(MyUser, MyUserAdmin)
