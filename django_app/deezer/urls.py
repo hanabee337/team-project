@@ -15,8 +15,10 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-from member.urls import views as member_view_urls
+
+from member.apis.login import LogoutView
 from member.urls import apis as member_apis_urls
+from member.urls import views as member_view_urls
 from . import views
 
 api_urlpatterns = [
@@ -26,11 +28,13 @@ api_urlpatterns = [
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
 
+    # local-server용 urls
     url(r'^$', views.index, name='index'),
-
     url(r'^member/', include(member_view_urls)),
 
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-
+    # api용 urls
     url(r'^api/', include(api_urlpatterns, namespace='api')),
+
+    # rest-framework login/logout url
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
