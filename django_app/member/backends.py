@@ -38,8 +38,8 @@ class FacebookBackend(object):
         # facebook_id가 username인 MyUser를 갖고오거나
         # defaults값을 이용해서 생성
         defaults = {
-            'first_name': extra_fields.get('first_name', ''),
-            'last_name': extra_fields.get('last_name', ''),
+            # 'first_name': extra_fields.get('first_name', ''),
+            # 'last_name': extra_fields.get('last_name', ''),
             'email': extra_fields.get('email', ''),
         }
 
