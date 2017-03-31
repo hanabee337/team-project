@@ -37,6 +37,7 @@ class SignupForm(forms.Form):
         password2 = self.cleaned_data['password2']
         gender = self.cleaned_data['gender']
         age = self.cleaned_data['age']
+        nickname = self.cleaned_data['nickname']
 
         user = MyUser.objects.create_user(
             # username=username,
@@ -48,6 +49,7 @@ class SignupForm(forms.Form):
 
         user.gender = gender
         user.age = age
+        user.nickname = nickname
         user.save()
 
         user = authenticate(

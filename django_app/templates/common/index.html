@@ -6,6 +6,7 @@
         {% if user.is_authenticated %}
             <!--<p>{{ user.username }}님이 로그인 되었다</p>-->
             <p>{{ user }}님이 로그인 되었다</p>
+            <p>{{ user.nickname }}님이 로그인 되었다</p>
             <a href="{% url 'member:logout' %}">로그아웃</a>
         {% else %}
             <div>

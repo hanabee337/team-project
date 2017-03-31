@@ -42,7 +42,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     password = models.CharField(max_length=100)
 
     USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email']
+    REQUIRED_FIELDS = ['email', 'nickname']
 
     objects = MyUserManager()
 
