@@ -6,8 +6,13 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
+from rest_framework import generics
+from rest_framework import status
+from rest_framework.response import Response
+
 from deezer.settings import config
 from member.forms import SignupForm, LoginForm
+from member.serializers import SignupSerializer
 
 
 def login_fbv(request):
@@ -243,3 +248,24 @@ def login_itself(request):
         'form': form,
     }
     return render(request, 'member/login_itself.html', context)
+
+
+class SignUp_cbv(generics.CreateAPIView):
+    serializer_class = SignupSerializer
+
+    def create(self, request, *args, **kwargs):
+        # 회원 가입하면서 gender, age, email 등을 동시에 입력하는 실습
+        # request.data : name, password, email, gender, age + user.pk
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        print('dir(serializer.data):{}'.format(dir(serializer.data)))
+
+        ret = serializer.data
+        print('serializer.data:{}'.format(serializer.data))
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def perform_create(self, serializer):
+        serializer.save()

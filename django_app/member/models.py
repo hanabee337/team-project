@@ -38,8 +38,10 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
 
     is_staff = models.BooleanField(default=False)
 
+    password = models.CharField(max_length=100)
+
     USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['email']
 
     objects = MyUserManager()
 
