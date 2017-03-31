@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth import authenticate
 
 from member.models import MyUser
 
@@ -14,6 +15,44 @@ class SignupForm(forms.Form):
     age = forms.IntegerField()
     password1 = forms.CharField(widget=forms.PasswordInput())
     password2 = forms.CharField(widget=forms.PasswordInput())
+
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        if MyUser.objects.filter(username=username).exists():
+            raise forms.ValidationError('username already exists')
+        return username
+
+    def clean_password2(self):
+        password1 = self.cleaned_data['password1']
+        password2 = self.cleaned_data['password2']
+        if password1 != password2:
+            raise forms.ValidationError('password1 does not match with password2')
+        return password2
+
+    def create_user(self):
+        print('self.cleaned_data:{}'.format(self.cleaned_data))
+
+        username = self.cleaned_data['username']
+        email = self.cleaned_data['email']
+        password2 = self.cleaned_data['password2']
+        gender = self.cleaned_data['gender']
+        age = self.cleaned_data['age']
+
+        user = MyUser.objects.create_user(
+            username=username,
+            email=email,
+            password=password2,
+        )
+
+        user.gender = gender
+        user.age = age
+        user.save()
+
+        user = authenticate(
+            username=username,
+            password=password2
+        )
+        return user
 
 
 class LoginForm(forms.Form):
