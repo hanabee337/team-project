@@ -15,9 +15,8 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-
-from member.urls import apis as member_apis_urls
 from member.urls import views as member_view_urls
+from member.urls import apis as member_apis_urls
 from . import views
 
 api_urlpatterns = [

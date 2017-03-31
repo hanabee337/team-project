@@ -6,13 +6,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
-from rest_framework import generics
-from rest_framework import status
-from rest_framework.response import Response
-
 from deezer.settings import config
-from member.forms import SignupForm, LoginForm
-from member.serializers import SignupSerializer
+from member.forms import LoginForm
 
 
 def login_fbv(request):
@@ -177,57 +172,6 @@ def login_facebook(request):
         return redirect('index')
 
 
-def signup_fbv(request):
-    """
-    회원 가입 구현
-    1. member/signup.html 파일 생성\
-    2. SignupForm 클래스 구현
-    3. 해당 Form을 사용해서 signup.html템플릿 구현
-    4. POST요청을 받아 MyUser객체 생성
-    5. 로그인 완료되면 post_list 뷰로 이동
-    """
-    if request.method == 'POST':
-        print('request.POST:{}'.format(request.POST))
-        form = SignupForm(data=request.POST)
-
-        if form.is_valid():
-            print('form.cleaned_data:{}'.format(form.cleaned_data))
-
-            # username = form.cleaned_data['username']
-            # email = form.cleaned_data['email']
-            # password = form.cleaned_data['password2']
-            # gender = form.cleaned_data['gender']
-            # age = form.cleaned_data['age']
-            #
-            # user = MyUser.objects.create_user(
-            #     username=username,
-            #     email=email,
-            #     password=password,
-            # )
-            # user.gender = gender
-            # user.age = age
-            # user.save()
-            user = form.create_user()
-            print('user1:{}'.format(user))
-
-            # user = authenticate(
-            #     username=username,
-            #     password=password
-            # )
-            print('user2:{}'.format(user))
-
-            login(request=request, user=user)
-
-            return redirect('index')
-    else:
-        form = SignupForm()
-
-    context = {
-        'form': form,
-    }
-    return render(request, 'member/signup.html', context)
-
-
 def login_itself(request):
     if request.method == 'POST':
         # return HttpResponse('login_itself POST view')
@@ -248,24 +192,3 @@ def login_itself(request):
         'form': form,
     }
     return render(request, 'member/login_itself.html', context)
-
-
-class SignUp_cbv(generics.CreateAPIView):
-    serializer_class = SignupSerializer
-
-    def create(self, request, *args, **kwargs):
-        # 회원 가입하면서 gender, age, email 등을 동시에 입력하는 실습
-        # request.data : name, password, email, gender, age + user.pk
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        print('dir(serializer.data):{}'.format(dir(serializer.data)))
-
-        ret = serializer.data
-        print('serializer.data:{}'.format(serializer.data))
-
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-    def perform_create(self, serializer):
-        serializer.save()
