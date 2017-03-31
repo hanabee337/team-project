@@ -16,14 +16,22 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
+from member.urls import apis as member_apis_urls
+from member.urls import views as member_view_urls
 from . import views
+
+api_urlpatterns = [
+    url(r'^member/', include(member_apis_urls)),
+]
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
 
     url(r'^$', views.index, name='index'),
 
-    url(r'^member/', include('member.urls')),
+    url(r'^member/', include(member_view_urls)),
 
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+
+    url(r'^api/', include(api_urlpatterns, namespace='api')),
 ]

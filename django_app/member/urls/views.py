@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from . import views
+from member import views
 
 app_name = 'member'
 urlpatterns = [
@@ -11,8 +11,7 @@ urlpatterns = [
     url(r'^login/facebook/$', views.login_facebook, name='login_facebook'),
     url(r'^login/instagram/$', views.login_instagram, name='login_instagram'),
 
-    # url(r'^signup/$', views.signup_fbv, name='signup'),
-    url(r'^signup/$', views.SignUp_cbv.as_view(), name='signup'),
+    url(r'^signup/$', views.signup_fbv, name='signup'),
 
     url(r'^login/itself/$', views.login_itself, name='login_itself'),
 ]
