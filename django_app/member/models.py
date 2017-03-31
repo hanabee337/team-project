@@ -8,7 +8,8 @@ class MyUserManager(BaseUserManager):
         if not username:
             raise ValueError('The given username must be set')
 
-        user = self.model(username=username, email=email, **extra_fields)
+        # username을 email로(email을 user id로 사용)
+        user = self.model(username=email, email=email, **extra_fields)
         user.set_password(password)
         user.save()
         return user

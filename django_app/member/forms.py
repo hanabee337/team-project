@@ -39,7 +39,9 @@ class SignupForm(forms.Form):
         age = self.cleaned_data['age']
 
         user = MyUser.objects.create_user(
-            username=username,
+            # username=username,
+            # username을 email로(email을 user id로 사용)
+            username=email,
             email=email,
             password=password2,
         )
