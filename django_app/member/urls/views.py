@@ -14,4 +14,6 @@ urlpatterns = [
     url(r'^signup/$', views.signup_fbv, name='signup'),
 
     url(r'^login/itself/$', views.login_itself, name='login_itself'),
+
+    url(r'^facebook/login/$', views.facebook_login, name='facebook_login'),
 ]

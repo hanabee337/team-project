@@ -192,3 +192,10 @@ def login_itself(request):
         'form': form,
     }
     return render(request, 'member/login_itself.html', context)
+
+
+def facebook_login(request):
+    context = {
+
+    }
+    return render(request, 'member/facebook_login.html', context)
