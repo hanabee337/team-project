@@ -1,7 +1,7 @@
 from django import forms
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, get_user_model
 
-from member.models import MyUser
+User = get_user_model()
 
 
 class SignupForm(forms.Form):
@@ -9,7 +9,7 @@ class SignupForm(forms.Form):
     nickname = forms.CharField(max_length=30)
     email = forms.EmailField(max_length=30, required=True)
     gender = forms.ChoiceField(
-        choices=MyUser.CHOICES_GENDER,
+        choices=User.CHOICES_GENDER,
         widget=forms.RadioSelect(),
     )
     age = forms.IntegerField()
@@ -18,7 +18,7 @@ class SignupForm(forms.Form):
 
     def clean_username(self):
         username = self.cleaned_data['username']
-        if MyUser.objects.filter(username=username).exists():
+        if User.objects.filter(username=username).exists():
             raise forms.ValidationError('username already exists')
         return username
 
@@ -39,7 +39,7 @@ class SignupForm(forms.Form):
         age = self.cleaned_data['age']
         nickname = self.cleaned_data['nickname']
 
-        user = MyUser.objects.create_user(
+        user = User.objects.create_user(
             # username=username,
             # username을 email로(email을 user id로 사용)
             username=email,

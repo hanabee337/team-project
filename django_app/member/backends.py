@@ -1,4 +1,6 @@
-from .models import MyUser
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 class InstagramBackend(object):
@@ -11,7 +13,7 @@ class InstagramBackend(object):
         }
         print('defaults:{}'.format(defaults))
 
-        user, user_created = MyUser.objects.get_or_create(
+        user, user_created = User.objects.get_or_create(
             username=instagram_id,
             defaults=defaults
         )
@@ -20,8 +22,8 @@ class InstagramBackend(object):
 
     def get_user(self, user_id):
         try:
-            return MyUser.objects.get(id=user_id)
-        except MyUser.DoesNotExist:
+            return User.objects.get(id=user_id)
+        except User.DoesNotExist:
             return None
 
 
@@ -46,7 +48,7 @@ class FacebookBackend(object):
         # 만약 get 하는 데 실패하면, user를 만들어 주자.
         # 실패했을 때, user를 만드는 간단한 방법 : get_or_create
         # user = MyUser.objects.get(username=facebook_id)
-        user, user_created = MyUser.objects.get_or_create(
+        user, user_created = User.objects.get_or_create(
             defaults=defaults,
             username=facebook_id,
         )
@@ -55,6 +57,6 @@ class FacebookBackend(object):
 
     def get_user(self, user_id):
         try:
-            return MyUser.objects.get(id=user_id)
-        except MyUser.DoesNotExist:
+            return User.objects.get(id=user_id)
+        except User.DoesNotExist:
             return None
