@@ -14,9 +14,9 @@ class SignupSerializer(serializers.Serializer):
     #     'password': {'write_only': True}
     # }
     email = serializers.EmailField()
-    age = serializers.IntegerField(max_value=200)
     nickname = serializers.CharField(max_length=30)
-    gender = serializers.ChoiceField(choices=User.CHOICES_GENDER)
+    gender = serializers.ChoiceField(choices=User.CHOICES_GENDER, required=False)
+    age = serializers.IntegerField(max_value=200, required=False)
 
     class Meta:
         model = User
