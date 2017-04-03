@@ -14,7 +14,9 @@ import os
 
 
 DEBUG = os.environ.get('MODE') == 'DEBUG'
+DB_RDS = os.environ.get('DB') == 'RDS'
 print('DEBUG:{}'.format(DEBUG))
+print('DB_RDS:{}'.format(DB_RDS))
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -129,21 +131,27 @@ WSGI_APPLICATION = 'deezer.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
+if DEBUG and DB_RDS:
+    # DEBUG모드이며 DB_RDS옵션일 경우, 로컬 postgreSQL이 아닌 RDS로 접속해 테스트한다.
+    config_db = config['db_rds']
+else:
+    # 그 외의 경우에는 해당 db설정을 따른다.
+    config_db = config['db']
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-
     # 'default': {
-    #     'ENGINE': config['db']['engine'],
-    #     'NAME': config['db']['name'],
-    #     'USER': config['db']['user'],
-    #     'PASSWORD': config['db']['password'],
-    #     'HOST': config['db']['host'],
-    #     'PORT': config['db']['port']
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     # }
+
+    'default': {
+        'ENGINE': config_db['engine'],
+        'NAME': config_db['name'],
+        'USER': config_db['user'],
+        'PASSWORD': config_db['password'],
+        'HOST': config_db['host'],
+        'PORT': config_db['port']
+    }
 }
 
 
