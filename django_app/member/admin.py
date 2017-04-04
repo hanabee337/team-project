@@ -7,17 +7,17 @@ from .models import MyUser
 
 class MyUserAdmin(UserAdmin):
     fieldsets = (
-        (None, {'fields': ('username', 'password')}),
-        (_('Personal info'), {'fields': ('email', 'nickname', 'gender', 'age', )}),
+        (None, {'fields': ('email', 'password')}),
+        (_('Personal info'), {'fields': ('nickname', 'gender', 'age', )}),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('username', 'password1', 'password2'),
+            'fields': ('email', 'password1', 'password2'),
         }),
     )
-
-    list_display = ('username', 'email',)
+    ordering = ('email',)
+    list_display = ('nickname', 'email',)
     list_filter = ('is_staff',)
 
 admin.site.register(MyUser, MyUserAdmin)
