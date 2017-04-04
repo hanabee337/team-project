@@ -13,4 +13,5 @@ class DeleteAuthToken(APIView):
         print(type(request.auth))
         token = Token.objects.get(key=request.auth.key)
         print('token:{}'.format(token))
+        request.auth.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
