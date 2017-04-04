@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
+import search.apis.urls
 from member.apis.login import LogoutView
 from member.urls import apis as member_apis_urls
 from member.urls import views as member_view_urls
@@ -33,8 +34,11 @@ urlpatterns = [
     url(r'^member/', include(member_view_urls)),
 
     # api용 urls
-    url(r'^api/', include(api_urlpatterns, namespace='api')),
+    url(r'^apis/', include(api_urlpatterns, namespace='apis')),
 
     # rest-framework login/logout url
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^apis-auth/', include('rest_framework.urls', namespace='rest_framework')),
+
+    # apis/search urls
+    url(r'^apis-search/', include(search.apis.urls, namespace='apis-search')),
 ]

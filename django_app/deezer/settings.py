@@ -48,14 +48,14 @@ CONFIG_FILE_COMMON = os.path.join(CONF_DIR, 'settings_common.json')
 # 2. settings_local.json의 경로를 CONFIG_FILE에 할당
 CONFIG_FILE_NAME = 'settings_local.json' if DEBUG else 'settings_deploy.json'
 config_file = open(os.path.join(CONF_DIR, CONFIG_FILE_NAME)).read()
-print('config_file: {}'.format(config_file))
+# print('config_file: {}'.format(config_file))
 
 # 3. CONFIG_FILE_COMMON경로의 파일을 읽어 json.loads()한 결과를 config_common에 할당
 config_common = json.loads(open(CONFIG_FILE_COMMON).read())
 
 # 4. CONFIG_FILE경로의 파일을 읽어 json.loads()한 결과를 config에 할당
 config = json.loads(config_file)
-print(config)
+# print(config)
 
 # config_common의 내용을 현재 config에 합침
 for key, key_dict in config_common.items():
@@ -63,11 +63,11 @@ for key, key_dict in config_common.items():
         config[key] = {}
     for inner_key, inner_key_dict in key_dict.items():
         config[key][inner_key] = inner_key_dict
-print(config)
+# print(config)
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config['django']['secret_key']
-print('SECRET_KEY:{}'.format(SECRET_KEY))
+# print('SECRET_KEY:{}'.format(SECRET_KEY))
 
 ALLOWED_HOSTS = config['django']['allowed_hosts']
 
@@ -90,6 +90,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'member',
+    'search',
+    'playlist',
 
     'rest_framework',
     'rest_framework.authtoken',
