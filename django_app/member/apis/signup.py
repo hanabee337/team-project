@@ -20,7 +20,16 @@ class SignUp_cbv(generics.CreateAPIView):
         ret = serializer.data
         print('serializer.data:{}'.format(serializer.data))
 
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        user_info = {
+            # 'username': ret.get('username', ''),
+            'email': ret.get('email', ''),
+            'age': ret.get('age', ''),
+            'nickname': ret.get('nickname', ''),
+            'gender': ret.get('gender', '')
+        }
+
+        # return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return Response({'user_info': user_info}, status=status.HTTP_201_CREATED, headers=headers)
 
     def perform_create(self, serializer):
         serializer.save()

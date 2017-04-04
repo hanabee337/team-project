@@ -60,3 +60,25 @@ class FacebookBackend(object):
             return User.objects.get(id=user_id)
         except User.DoesNotExist:
             return None
+
+
+class UserModelBackend(object):
+    """
+    Authenticates against settings.AUTH_USER_MODEL.
+    """
+
+    def authenticate(self, email=None, password=None, **kwargs):
+        print('\nUserModelBackend authenticate\n')
+
+        UserModel = get_user_model()
+        if email is None:
+            email = kwargs.get(UserModel.USERNAME_FIELD)
+        try:
+            user = UserModel._default_manager.get_by_natural_key(email)
+        except UserModel.DoesNotExist:
+            # Run the default password hasher once to reduce the timing
+            # difference between an existing and a non-existing user (#20760).
+            UserModel().set_password(password)
+        else:
+            if user.check_password(password) and self.user_can_authenticate(user):
+                return user
