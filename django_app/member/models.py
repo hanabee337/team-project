@@ -4,25 +4,25 @@ from django.db import models
 
 
 class MyUserManager(BaseUserManager):
-    def _create_user(self, username, email, password, **extra_fields):
-        if not username:
-            raise ValueError('The given username must be set')
+    def _create_user(self, nickname, email, password, **extra_fields):
+        if not email:
+            raise ValueError('The given email must be set')
 
         # username을 email로(email을 user id로 사용)
-        user = self.model(username=email, email=email, **extra_fields)
+        user = self.model(nickname=nickname, email=email, **extra_fields)
         user.set_password(password)
         user.save()
         return user
 
-    def create_user(self, username, email=None, password=None, **extra_fields):
+    def create_user(self, nickname=None, email=None, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', False)
         extra_fields.setdefault('is_superuser', False)
-        return self._create_user(username, email, password, **extra_fields)
+        return self._create_user(nickname, email, password, **extra_fields)
 
-    def create_superuser(self, username, email, password, **extra_fields):
+    def create_superuser(self, nickname, email, password, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
-        return self._create_user(username, email, password, **extra_fields)
+        return self._create_user(nickname, email, password, **extra_fields)
 
 
 class MyUser(AbstractBaseUser, PermissionsMixin):
@@ -31,26 +31,26 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
         ('F', 'Female'),
     )
 
-    username = models.CharField(max_length=30, unique=True)
-    nickname = models.CharField(max_length=30)
-    email = models.EmailField(blank=False, null=False)
+    # username = models.CharField(max_length=255, unique=True)
+    nickname = models.CharField(max_length=255, blank=False, null=False)
+    email = models.EmailField(unique=True)
     gender = models.CharField(max_length=1, choices=CHOICES_GENDER)
     age = models.IntegerField(blank=True, null=True)
 
     is_staff = models.BooleanField(default=False)
 
-    password = models.CharField(max_length=100)
+    password = models.CharField(max_length=255)
 
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email', 'nickname']
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['nickname']
 
     objects = MyUserManager()
 
     def __str__(self):
-        return self.username
+        return self.email
 
     def get_full_name(self):
-        return self.username
+        return self.email
 
     def get_short_name(self):
-        return self.username
+        return self.email

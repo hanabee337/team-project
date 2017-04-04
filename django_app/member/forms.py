@@ -5,9 +5,9 @@ User = get_user_model()
 
 
 class SignupForm(forms.Form):
-    username = forms.CharField(max_length=30)
-    nickname = forms.CharField(max_length=30)
-    email = forms.EmailField(max_length=30, required=True)
+    # username = forms.CharField(max_length=30)
+    nickname = forms.CharField(max_length=255, required=True)
+    email = forms.EmailField(max_length=255, required=True)
     gender = forms.ChoiceField(
         choices=User.CHOICES_GENDER,
         widget=forms.RadioSelect(),
@@ -17,10 +17,10 @@ class SignupForm(forms.Form):
     password2 = forms.CharField(widget=forms.PasswordInput())
 
     def clean_username(self):
-        username = self.cleaned_data['username']
-        if User.objects.filter(username=username).exists():
-            raise forms.ValidationError('username already exists')
-        return username
+        email = self.cleaned_data['email']
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError('email already exists')
+        return email
 
     def clean_password2(self):
         password1 = self.cleaned_data['password1']
@@ -32,7 +32,7 @@ class SignupForm(forms.Form):
     def create_user(self):
         print('self.cleaned_data:{}'.format(self.cleaned_data))
 
-        username = self.cleaned_data['username']
+        # username = self.cleaned_data['username']
         email = self.cleaned_data['email']
         password2 = self.cleaned_data['password2']
         gender = self.cleaned_data['gender']
@@ -42,23 +42,25 @@ class SignupForm(forms.Form):
         user = User.objects.create_user(
             # username=username,
             # username을 email로(email을 user id로 사용)
-            username=email,
+            # username=email,
             email=email,
+            nickname=nickname,
             password=password2,
         )
 
         user.gender = gender
         user.age = age
-        user.nickname = nickname
+        # user.nickname = nickname
         user.save()
 
         user = authenticate(
-            username=username,
+            email=email,
             password=password2
         )
         return user
 
 
 class LoginForm(forms.Form):
-    username = forms.CharField(max_length=30)
-    password = forms.CharField(max_length=30, widget=forms.PasswordInput)
+    # username = forms.CharField(max_length=255)
+    email = forms.CharField(max_length=255)
+    password = forms.CharField(max_length=255, widget=forms.PasswordInput)

@@ -21,7 +21,7 @@ class SignUp_cbv(generics.CreateAPIView):
         print('serializer.data:{}'.format(serializer.data))
 
         user_info = {
-            'username': ret.get('username', ''),
+            # 'username': ret.get('username', ''),
             'email': ret.get('email', ''),
             'age': ret.get('age', ''),
             'nickname': ret.get('nickname', ''),

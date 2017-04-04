@@ -5,7 +5,7 @@ User = get_user_model()
 
 
 class SignupSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=30)
+    # username = serializers.CharField(max_length=255)
     password = serializers.CharField(
         style={'input_type': 'password'},
         min_length=8,
@@ -14,14 +14,15 @@ class SignupSerializer(serializers.Serializer):
     #     'password': {'write_only': True}
     # }
     email = serializers.EmailField()
-    nickname = serializers.CharField(max_length=30)
+    nickname = serializers.CharField(max_length=255)
     gender = serializers.ChoiceField(choices=User.CHOICES_GENDER, required=False)
     age = serializers.IntegerField(max_value=200, required=False)
 
     class Meta:
         model = User
         fields = (
-            'username', 'nickname', 'email',
+            # 'username',
+            'nickname', 'email',
             'gender', 'age', 'password',
         )
 
