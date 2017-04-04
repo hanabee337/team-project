@@ -29,3 +29,14 @@ class SignupSerializer(serializers.Serializer):
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
         return user
+
+
+class UserInfoSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    nickname = serializers.CharField(max_length=255)
+    gender = serializers.ChoiceField(choices=User.CHOICES_GENDER, required=False)
+    age = serializers.IntegerField(max_value=200, required=False)
+
+    class Meta:
+        model = User
+        fields = ('nickname', 'email', 'gender', 'age',)
