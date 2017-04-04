@@ -164,6 +164,8 @@ def login_facebook(request):
         last_name = dict_user_info['last_name']
         USER_NAME = last_name + ' ' + first_name
 
+        print('email:{}'.format(dict_user_info['email']))
+
         # 페이스북 유저 ID만으로 인증
         # user = authenticate(facebook_id=USER_ID)
         # 페이스북 유저 ID와 graph API에 요청한 dict_user_info로 인증
