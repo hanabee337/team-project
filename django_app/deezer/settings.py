@@ -158,6 +158,7 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
 AUTHENTICATION_BACKENDS = [
+    'member.backends.UserModelBackend',
     'django.contrib.auth.backends.ModelBackend',
     'member.backends.InstagramBackend',
     'member.backends.FacebookBackend',
