@@ -22,8 +22,8 @@ print('DB_RDS:{}'.format(DB_RDS))
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ROOT_DIR = os.path.dirname(BASE_DIR)
 
-# .conf
-CONF_DIR = os.path.join(ROOT_DIR, '.conf')
+# .conf-secret
+CONF_DIR = os.path.join(ROOT_DIR, '.conf-secret')
 print('CONF_DIR:{}'.format(CONF_DIR))
 # config = json.loads(open(os.path.join(CONF_DIR, 'settings_local.json')).read())
 # print('config:{}'.format(config))
