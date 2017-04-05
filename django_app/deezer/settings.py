@@ -41,7 +41,7 @@ STATIC_ROOT = os.path.join(ROOT_DIR, 'static_root')
 
 # media
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(ROOT_DIR, 'media')
 
 # 1. settings_common.json의 경로를 CONFIG_FILE_COMMON에 할당
 CONFIG_FILE_COMMON = os.path.join(CONF_DIR, 'settings_common.json')
