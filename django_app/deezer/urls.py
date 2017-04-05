@@ -32,6 +32,7 @@ urlpatterns = [
     # local-server용 urls
     url(r'^$', views.index, name='index'),
     url(r'^member/', include(member_view_urls)),
+    url(r'^playlist/', include('playlist.urls')),
 
     # api용 urls
     url(r'^apis/', include(api_urlpatterns, namespace='apis')),

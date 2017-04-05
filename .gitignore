@@ -2,10 +2,12 @@
 # Created by https://www.gitignore.io/api/pycharm,django,python
 
 ### custom ###
+.gitignore
 .conf/
 .conf-secret/
 _Dockerifile*
 django_app/static/css/
+django_app/deezer/settings.py
 
 ### bower packages
 bower_components/
