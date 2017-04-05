@@ -34,14 +34,15 @@ class SignupSerializer(serializers.Serializer):
 
 
 class LoginSerializer(serializers.Serializer):
-    nickname = serializers.CharField(required=True, allow_blank=False)
+    # nickname = serializers.CharField(required=True, allow_blank=False)
     email = serializers.EmailField(required=True, allow_blank=False)
     password = serializers.CharField(style={'input_type': 'password'})
 
     class Meta:
         model = UserModel
         fields = (
-            'nickname', 'email', 'password',
+            # 'nickname',
+            'email', 'password',
         )
 
     def _validate_email(self, email, password):
