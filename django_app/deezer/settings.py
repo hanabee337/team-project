@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 import json
 import os
-from pprint import pprint
 
 DEBUG = os.environ.get('MODE') == 'DEBUG'
 DB_RDS = os.environ.get('DB') == 'RDS'
