@@ -44,7 +44,7 @@ urlpatterns = [
     url(r'^apis-search/', include(search.apis.urls, namespace='apis-search')),
 ]
 
-if settings.DEBUG:
+if settings.DEBUG and settings.STORAGE_S3 is False:
     urlpatterns += static(
         settings.MEDIA_URL,
         document_root=settings.MEDIA_ROOT

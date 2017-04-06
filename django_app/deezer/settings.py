@@ -12,10 +12,11 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import json
 import os
 
-
 DEBUG = os.environ.get('MODE') == 'DEBUG'
+STORAGE_S3 = os.environ.get('STORAGE') == 'S3' or DEBUG is False
 DB_RDS = os.environ.get('DB') == 'RDS'
 print('DEBUG:{}'.format(DEBUG))
+print('STORAGE_S3:{}'.format(STORAGE_S3))
 print('DB_RDS:{}'.format(DB_RDS))
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -30,18 +31,6 @@ print('CONF_DIR:{}'.format(CONF_DIR))
 
 # templates
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
-
-# static
-STATIC_URL = '/static/'
-STATIC_DIR = os.path.join(BASE_DIR, 'static')
-STATICFILES_DIRS = [
-    STATIC_DIR,
-]
-STATIC_ROOT = os.path.join(ROOT_DIR, 'static_root')
-
-# media
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(ROOT_DIR, 'media')
 
 # 1. settings_common.json의 경로를 CONFIG_FILE_COMMON에 할당
 CONFIG_FILE_COMMON = os.path.join(CONF_DIR, 'settings_common.json')
@@ -65,6 +54,37 @@ for key, key_dict in config_common.items():
     for inner_key, inner_key_dict in key_dict.items():
         config[key][inner_key] = inner_key_dict
 # print(config)
+
+
+# static
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = [
+    STATIC_DIR,
+]
+
+# AWS
+AWS_ACCESS_KEY_ID = config['aws']['access_key_id']
+AWS_SECRET_ACCESS_KEY = config['aws']['secret_access_key']
+
+AWS_S3_HOST = 's3.{}.amazonaws.com'.format(config['aws']['s3_region'])
+AWS_S3_SIGNATURE_VERSION = config['aws']['s3_signature_version']
+AWS_STORAGE_BUCKET_NAME = config['aws']['s3_storage_bucket_name']
+AWS_S3_CUSTOM_DOMAIN = '{}.s3.amazonaws.com'.format(AWS_STORAGE_BUCKET_NAME)
+
+if STORAGE_S3:
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    STATICFILES_STORAGE = 'deezer.storages.StaticStorage'
+    STATICFILES_LOCATION = 'static'
+    STATIC_URL = 'https://{custom_domain}/{staticfiles_location}/'.format(
+        custom_domain=AWS_S3_CUSTOM_DOMAIN,
+        staticfiles_location=STATICFILES_LOCATION
+    )
+else:
+    STATIC_ROOT = os.path.join(ROOT_DIR, 'static_root')
+    STATIC_URL = '/static/'
+    # media
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(ROOT_DIR, 'media')
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config['django']['secret_key']
@@ -90,13 +110,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'rest_framework',
+    'rest_framework.authtoken',
+    'rest_auth',
+
+    'storages',
+
     'member',
     'search',
     'playlist',
 
-    'rest_framework',
-    'rest_framework.authtoken',
-    'rest_auth',
 ]
 
 MIDDLEWARE = [
@@ -131,7 +154,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'deezer.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 if DEBUG and DB_RDS:
@@ -157,7 +179,6 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
 AUTHENTICATION_BACKENDS = [
@@ -167,7 +188,7 @@ AUTHENTICATION_BACKENDS = [
     'member.backends.FacebookBackend',
 ]
 
-AUTH_USER_MODEL='member.MyUser'
+AUTH_USER_MODEL = 'member.MyUser'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -183,7 +204,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
@@ -201,4 +221,3 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
-
