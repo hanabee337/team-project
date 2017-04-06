@@ -61,15 +61,15 @@ config_common = json.loads(open(CONFIG_FILE_COMMON).read())
 
 # 4. CONFIG_FILE경로의 파일을 읽어 json.loads()한 결과를 config에 할당
 config = json.loads(config_file)
-pprint('config:{}'.format(config))
+# pprint('config:{}'.format(config))
 
 # config_common의 내용을 현재 config에 합침
-# for key, key_dict in config_common.items():
-#     if not config.get(key):
-#         config[key] = {}
-#     for inner_key, inner_key_dict in key_dict.items():
-#         config[key][inner_key] = inner_key_dict
-# print(config)
+for key, key_dict in config_common.items():
+    if not config.get(key):
+        config[key] = {}
+    for inner_key, inner_key_dict in key_dict.items():
+        config[key][inner_key] = inner_key_dict
+print(config)
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config['django']['secret_key']
