@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 import json
 import os
-
+from pprint import pprint
 
 DEBUG = os.environ.get('MODE') == 'DEBUG'
 DB_RDS = os.environ.get('DB') == 'RDS'
@@ -24,7 +24,7 @@ ROOT_DIR = os.path.dirname(BASE_DIR)
 
 # .conf-secret
 CONF_DIR = os.path.join(ROOT_DIR, '.conf-secret')
-print('CONF_DIR:{}'.format(CONF_DIR))
+# print('CONF_DIR:{}'.format(CONF_DIR))
 # config = json.loads(open(os.path.join(CONF_DIR, 'settings_local.json')).read())
 # print('config:{}'.format(config))
 
@@ -45,38 +45,38 @@ MEDIA_ROOT = os.path.join(ROOT_DIR, 'media')
 
 # 1. settings_common.json의 경로를 CONFIG_FILE_COMMON에 할당
 CONFIG_FILE_COMMON = os.path.join(CONF_DIR, 'settings_common.json')
+# print('CONFIG_FILE_COMMON:{}'.format(CONFIG_FILE_COMMON))
 
 # 2. settings_local.json의 경로를 CONFIG_FILE에 할당
 CONFIG_FILE_NAME = 'settings_local.json' if DEBUG else 'settings_deploy.json'
+# print('CONFIG_FILE_NAME:{}'.format(CONFIG_FILE_NAME))
+
 config_file = open(os.path.join(CONF_DIR, CONFIG_FILE_NAME)).read()
-# print('config_file: {}'.format(config_file))
+# print('config_file:{}'.format(config_file))
 
 # 3. CONFIG_FILE_COMMON경로의 파일을 읽어 json.loads()한 결과를 config_common에 할당
 config_common = json.loads(open(CONFIG_FILE_COMMON).read())
+# print('config_common:{}'.format(config_common))
+
 
 # 4. CONFIG_FILE경로의 파일을 읽어 json.loads()한 결과를 config에 할당
 config = json.loads(config_file)
-# print(config)
+pprint('config:{}'.format(config))
 
 # config_common의 내용을 현재 config에 합침
-for key, key_dict in config_common.items():
-    if not config.get(key):
-        config[key] = {}
-    for inner_key, inner_key_dict in key_dict.items():
-        config[key][inner_key] = inner_key_dict
+# for key, key_dict in config_common.items():
+#     if not config.get(key):
+#         config[key] = {}
+#     for inner_key, inner_key_dict in key_dict.items():
+#         config[key][inner_key] = inner_key_dict
 # print(config)
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config['django']['secret_key']
+
 # print('SECRET_KEY:{}'.format(SECRET_KEY))
 
-ALLOWED_HOSTS = [
-    '*',
-    '.amazonaws.com'
-                 ]
-
-
-
+ALLOWED_HOSTS = config['django']['allowed_hosts']
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -137,7 +137,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'deezer.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 if DEBUG and DB_RDS:
@@ -163,7 +162,6 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
 AUTHENTICATION_BACKENDS = [
@@ -173,7 +171,7 @@ AUTHENTICATION_BACKENDS = [
     'member.backends.FacebookBackend',
 ]
 
-AUTH_USER_MODEL='member.MyUser'
+AUTH_USER_MODEL = 'member.MyUser'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -189,7 +187,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
@@ -207,4 +204,3 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
-
