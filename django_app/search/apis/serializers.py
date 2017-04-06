@@ -11,7 +11,8 @@ class MusicListSerializer(serializers.ModelSerializer):
             "artist",
             "title",
             "preview",
-            "picture",
+            "artist_picture",
+            "album_picture",
         )
 
 
@@ -22,7 +23,8 @@ class MusicCreateSerializer(serializers.ModelSerializer):
             "artist",
             "title",
             "preview",
-            "picture",
+            "artist_picture",
+            "album_picture",
         )
 
 
