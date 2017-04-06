@@ -72,12 +72,19 @@ AWS_STORAGE_BUCKET_NAME = config['aws']['s3_storage_bucket_name']
 AWS_S3_CUSTOM_DOMAIN = '{}.s3.amazonaws.com'.format(AWS_STORAGE_BUCKET_NAME)
 
 if STORAGE_S3:
-    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    # static files
     STATICFILES_STORAGE = 'deezer.storages.StaticStorage'
     STATICFILES_LOCATION = 'static'
     STATIC_URL = 'https://{custom_domain}/{staticfiles_location}/'.format(
         custom_domain=AWS_S3_CUSTOM_DOMAIN,
         staticfiles_location=STATICFILES_LOCATION
+    )
+    # media files
+    DEFAULT_FILE_STORAGE = 'deezer.storages.MediaStorage'
+    MEDIAFILES_LOCATION = 'media'
+    MEDIA_URL = 'https://{custom_domain}/{mediafiles_location}/'.format(
+        custom_domain=AWS_S3_CUSTOM_DOMAIN,
+        mediafiles_location=MEDIAFILES_LOCATION
     )
 else:
     STATIC_ROOT = os.path.join(ROOT_DIR, 'static_root')
