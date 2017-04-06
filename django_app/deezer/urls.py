@@ -14,10 +14,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url, include
+from django.conf.urls.static import static
 from django.contrib import admin
 
 import search.apis.urls
-from member.apis.login import LogoutView
+from deezer import settings
 from member.urls import apis as member_apis_urls
 from member.urls import views as member_view_urls
 from . import views
@@ -42,3 +43,9 @@ urlpatterns = [
     # apis/search urls
     url(r'^apis-search/', include(search.apis.urls, namespace='apis-search')),
 ]
+
+if settings.DEBUG and settings.STORAGE_S3 is False:
+    urlpatterns += static(
+        settings.MEDIA_URL,
+        document_root=settings.MEDIA_ROOT
+    )

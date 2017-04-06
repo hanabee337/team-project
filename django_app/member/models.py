@@ -41,6 +41,8 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
 
     password = models.CharField(max_length=255)
 
+    img_profile = models.ImageField(upload_to='user', blank=True)
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['nickname']
 
