@@ -7,7 +7,6 @@ from django.utils.translation import ugettext_lazy as _
 from rest_auth.app_settings import JWTSerializer, TokenSerializer, create_token
 from rest_auth.models import TokenModel
 from rest_auth.utils import jwt_encode
-from rest_auth.views import LoginSerializer
 from rest_auth.views import LoginView as RestLoginView
 from rest_auth.views import LogoutView as RestLogoutView
 from rest_framework import permissions
@@ -15,7 +14,7 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from member.serializers import UserInfoSerializer
+from member.serializers import UserInfoSerializer, LoginSerializer
 
 
 class LoginView(RestLoginView):
