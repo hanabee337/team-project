@@ -11,7 +11,7 @@ def search_from_deezer(keyword, page_token=None):
     deezer_api_key = config['deezer']['API_KEY_DEEZER']
     params = {
         'q': keyword,
-        'maxResults': 20,
+        'maxResults': 30,
         'type': 'artist',
         'key': deezer_api_key,
     }
@@ -45,13 +45,15 @@ def search(request):
             artist = item['artist']['name']
             title = item['title']
             preview = item['preview']
-            picture = item['artist']['picture_small']
+            artist_picture = item['artist']['picture_small']
+            album_picture = item['album']['cover_small']
 
             cur_item_dict = {
                 'artist': artist,
                 'title': title,
                 'preview': preview,
-                'picture': picture,
+                'artist_picture': artist_picture,
+                'album_picture': album_picture,
             }
             musics.append(cur_item_dict)
             pprint(musics)

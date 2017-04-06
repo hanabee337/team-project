@@ -70,7 +70,13 @@ for key, key_dict in config_common.items():
 SECRET_KEY = config['django']['secret_key']
 # print('SECRET_KEY:{}'.format(SECRET_KEY))
 
-ALLOWED_HOSTS = config['django']['allowed_hosts']
+ALLOWED_HOSTS = [
+    '*',
+    '.amazonaws.com'
+                 ]
+
+
+
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
