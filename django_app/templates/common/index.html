@@ -1,7 +1,10 @@
 {% extends 'common/base.html' %}
 
 {% block content %}
-    <h1>Index Page</h1>
+    <h1> Music PlayList Sharing Project </h1>
+    <h3> Team-7 멤버 분들 모두 환영합니다~~~ </h3>
+    <strong>API 문서에 나와있는 URL을 브라우저에 추가해서 접속하시면 됩니다.</strong>
+
     <div>
         {% if user.is_authenticated %}
             <!--<p>{{ user.username }}님이 로그인 되었다</p>-->
@@ -10,10 +13,10 @@
             <a href="{% url 'member:logout' %}">로그아웃</a>
         {% else %}
             <div>
-                <a href="{% url 'member:login' %}">로그인 할래?</a>
+                <!--<a href="{% url 'member:login' %}">로그인 할래?</a>-->
             </div>
             <div>
-                <a href="{% url 'member:signup' %}">회원 가입할래?</a>
+                <!--<a href="{% url 'member:signup' %}">회원 가입할래?</a>-->
             </div>
         {% endif %}
     </div>
