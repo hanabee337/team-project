@@ -16,7 +16,6 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
-import search.apis.urls
 from member.apis.login import LogoutView
 from member.urls import apis as member_apis_urls
 from member.urls import views as member_view_urls
@@ -39,6 +38,9 @@ urlpatterns = [
     # rest-framework login/logout url
     url(r'^apis-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
+
     # apis/search urls
-    url(r'^apis-search/', include(search.apis.urls, namespace='apis-search')),
+    url(r'^apis-search/', include('search.apis.urls', namespace='apis-search')),
+    # local search route
+    url(r'^search/', include('search.urls')),
 ]
