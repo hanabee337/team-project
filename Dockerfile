@@ -15,10 +15,10 @@ WORKDIR     /srv/app
 
 RUN         pip3 install -r requirements.txt
 RUN         pip3 install uwsgi
-WORKDIR     /srv/app/django_app
-CMD         ["python3", "manage.py", "runserver", "0:8080"]
+#WORKDIR     /srv/app/django_app
+#CMD         ["python3", "manage.py", "runserver", "0:8080"]
 
-#COPY        .conf/uwsgi-app.ini     /etc/uwsgi/sites/app.ini
+COPY        .conf/uwsgi-app.ini     /etc/uwsgi/sites/app.ini
 
 #COPY        .conf-secret/uwsgi-app.ini         /etc/uwsgi/sites/app.ini
 #COPY        .conf-secret/nginx.conf            /etc/nginx/nginx.conf
