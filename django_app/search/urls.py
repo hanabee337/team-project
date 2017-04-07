@@ -1,15 +1,11 @@
 from django.conf.urls import url
+from rest_framework.urlpatterns import format_suffix_patterns
 
-from .views import (
-    # MusicListAPIView,
-    MusicListCreate,
-    MyApi,
-    PartyView)
+from search import views
+
 
 urlpatterns = [
-    url(r'^list/$', MusicListCreate.as_view(), name='music_list'),
-    url(r'^create/$', MusicListCreate.as_view(), name='music_create'),
-    url(r'^myapi/$', MyApi.as_view(), name='music_create'),
-    url(r'^party/$', PartyView.as_view(), name='music_create'),
-
+    url(r'^$', views.search, name='music_search'),
 ]
+
+urlpatterns = format_suffix_patterns(urlpatterns)
