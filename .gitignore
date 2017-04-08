@@ -3,7 +3,7 @@
 
 ### project custom ###
 .conf-secret/
-_Dockerfile*
+#_Dockerfile*
 django_app/static/css/
 static_root/
 
