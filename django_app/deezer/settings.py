@@ -12,8 +12,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import json
 import os
 
-DEBUG = True
-# DEBUG = os.environ.get('MODE') == 'DEBUG'
+DEBUG = os.environ.get('MODE') == 'DEBUG'
 STORAGE_S3 = os.environ.get('STORAGE') == 'S3' or DEBUG is False
 DB_RDS = os.environ.get('DB') == 'RDS'
 print('DEBUG:{}'.format(DEBUG))
@@ -185,19 +184,19 @@ else:
     config_db = config['db']
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-
     # 'default': {
-    #     'ENGINE': config_db['engine'],
-    #     'NAME': config_db['name'],
-    #     'USER': config_db['user'],
-    #     'PASSWORD': config_db['password'],
-    #     'HOST': config_db['host'],
-    #     'PORT': config_db['port']
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     # }
+
+    'default': {
+        'ENGINE': config_db['engine'],
+        'NAME': config_db['name'],
+        'USER': config_db['user'],
+        'PASSWORD': config_db['password'],
+        'HOST': config_db['host'],
+        'PORT': config_db['port']
+    }
 }
 
 # Password validation
