@@ -28,19 +28,40 @@ def search(request, format=None):
 
     for item in items:
         # 실제로 사용할 데이터
+        id_num = item['id']
+        rank = item['rank']
+        duration = item['duration']
+        title = item['title_short']
         artist = item['artist']['name']
-        title = item['title']
         preview = item['preview']
-        artist_picture = item['artist']['picture_small']
-        album_picture = item['album']['cover_small']
+        artist_picture_small = item['artist']['picture_small']
+        artist_picture_medium = item['artist']['picture_medium']
+        artist_picture_big = item['artist']['picture_big']
+
+        album_picture_small = item['album']['cover_small']
+        album_picture_medium = item['album']['cover_medium']
+        album_picture_big = item['album']['cover_big']
+
 
         cur_item_dict = {
+            'id_num': id_num,
+            'rank': rank,
+            'duration': duration,
             'artist': artist,
             'title': title,
             'preview': preview,
-            'artist_picture': artist_picture,
-            'album_picture': album_picture,
+
+            'artist_picture_small': artist_picture_small,
+            'artist_picture_medium': artist_picture_medium,
+            'artist_picture_big': artist_picture_big,
+
+            'album_picture_small': album_picture_small,
+            'album_picture_medium': album_picture_medium,
+            'album_picture_big': album_picture_big,
+
         }
+
+
         data = musics.append(cur_item_dict)
         # print('data: {}'.format(data))
         # jdata = musics.append(cur_item_dict)
