@@ -85,7 +85,19 @@ class LoginSerializer(serializers.Serializer):
 
         return user
 
+    def validate_email(self, email):
+        # print('validate_email:{}'.format(email))
+
+        try:
+            UserModel.objects.get(email__iexact=email).get_username()
+        except UserModel.DoesNotExist:
+            msg = _('A user using this email does not exist, check the email again.')
+            raise exceptions.ValidationError(msg)
+        return email
+
     def validate(self, attrs):
+        # print('\nvalidate:{}'.format(attrs))
+
         username = attrs.get('username')
         email = attrs.get('email')
         password = attrs.get('password')
