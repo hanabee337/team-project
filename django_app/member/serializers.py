@@ -12,9 +12,7 @@ class SignupSerializer(serializers.Serializer):
         style={'input_type': 'password'},
         min_length=8
     )
-    # extra_kwargs = {
-    #     'password': {'write_only': True}
-    # }
+
     email = serializers.EmailField()
     nickname = serializers.CharField(max_length=255, required=True)
     gender = serializers.ChoiceField(choices=UserModel.CHOICES_GENDER, required=False)
@@ -27,6 +25,13 @@ class SignupSerializer(serializers.Serializer):
             'nickname', 'email',
             'gender', 'age', 'password',
         )
+
+    def validate_email(self, email):
+        # print('\nvalidate_email\n')
+        if UserModel.objects.filter(email__iexact=email).exists():
+            raise serializers.ValidationError(
+                _("A user is already registered with this e-mail address. so try another one"))
+        return email
 
     def create(self, validated_data):
         user = UserModel.objects.create_user(**validated_data)
