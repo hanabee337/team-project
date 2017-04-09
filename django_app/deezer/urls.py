@@ -42,5 +42,5 @@ urlpatterns = [
     # apis/search urls
     url(r'^apis-search/', include('search.apis.urls', namespace='apis-search')),
     # local search route
-    url(r'^search/', include('search.urls')),
+    url(r'^local/', include('search.urls')),
 ]
