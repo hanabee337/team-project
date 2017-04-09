@@ -8,11 +8,14 @@ UserModel = get_user_model()
 
 class SignupSerializer(serializers.Serializer):
     # username = serializers.CharField(max_length=255)
-    password = serializers.CharField(
+    password1 = serializers.CharField(
         style={'input_type': 'password'},
         min_length=8
     )
-
+    password2 = serializers.CharField(
+        style={'input_type': 'password'},
+        min_length=8
+    )
     email = serializers.EmailField()
     nickname = serializers.CharField(max_length=255, required=True)
     gender = serializers.ChoiceField(choices=UserModel.CHOICES_GENDER, required=False)
@@ -23,7 +26,7 @@ class SignupSerializer(serializers.Serializer):
         fields = (
             # 'username',
             'nickname', 'email',
-            'gender', 'age', 'password',
+            'gender', 'age', 'password1', 'password2'
         )
 
     def validate_email(self, email):
@@ -32,6 +35,14 @@ class SignupSerializer(serializers.Serializer):
             raise serializers.ValidationError(
                 _("A user is already registered with this e-mail address. so try another one"))
         return email
+
+    def validate(self, attrs):
+        password1 = attrs.get('password1')
+        password2 = attrs.get('password2')
+        if password1 != password2:
+            msg = _('Two passwords do not match. Are you sure?...')
+            raise exceptions.ValidationError(msg)
+        return attrs
 
     def create(self, validated_data):
         user = UserModel.objects.create_user(**validated_data)
