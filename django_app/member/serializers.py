@@ -50,7 +50,7 @@ class LoginSerializer(serializers.Serializer):
             'email', 'password',
         )
 
-    def _validate_email(self, email, password):
+    def _validate_password(self, email, password):
         user = None
 
         if email and password:
@@ -59,18 +59,24 @@ class LoginSerializer(serializers.Serializer):
             msg = _('Must include "email" and "password".')
             raise exceptions.ValidationError(msg)
 
-        return user
-
-    def _validate_username(self, username, password):
-        user = None
-
-        if username and password:
-            user = authenticate(username=username, password=password)
-        else:
-            msg = _('Must include "username" and "password".')
+        if user is None:
+            # we assume that email is already validated in 'validate_email',
+            # so, we assume that only password does not match
+            msg = _('Your password does not match. Are your sure?')
             raise exceptions.ValidationError(msg)
 
         return user
+
+    # def _validate_username(self, username, password):
+    #     user = None
+    #
+    #     if username and password:
+    #         user = authenticate(username=username, password=password)
+    #     else:
+    #         msg = _('Must include "username" and "password".')
+    #         raise exceptions.ValidationError(msg)
+    #
+    #     return user
 
     def _validate_username_email(self, username, email, password):
         user = None
@@ -126,6 +132,8 @@ class LoginSerializer(serializers.Serializer):
                     username = UserModel.objects.get(email__iexact=email).get_username()
                 except UserModel.DoesNotExist:
                     pass
+
+                user = self._validate_password(email, password)
 
             if username:
                 user = self._validate_username_email(username, '', password)
