@@ -2,82 +2,62 @@ import json
 from pprint import pprint
 
 import requests
+from django.shortcuts import render, redirect
 
-from rest_framework import status
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from search.models import Music
-from search.serializers import MusicSerializer
+from deezer.settings import config
 
 
-@api_view(['GET', 'POST'])
-def search(request, format=None):
+def search_from_deezer(keyword, page_token=None):
+    deezer_api_key = config['deezer']['API_KEY_DEEZER']
+    params = {
+        'q': keyword,
+        'maxResults': 30,
+        'type': 'artist',
+        'key': deezer_api_key,
+    }
+
+    r = requests.get('https://apis.deezer.com/2.0/search?q=', params=params)
+    result = r.text
+
+    # 해당 내용을 다시 json.loads()를 이용해 파이썬 객체로 변환
+    result_dict = json.loads(result)
+    return result_dict
+
+
+
+def search(request):
     musics = []
     context = {
         'musics': musics,
     }
-    r = requests.get('https://api.deezer.com/search?q=mraz')
-    result = r.text
-    result_dict = json.loads(result)
 
-    search_result = result_dict
+    keyword = request.GET.get('keyword', '').strip()
 
-    # context['keyword'] = keyword
+    if keyword != '':
+        search_result = search_from_deezer(keyword)
 
-    items = search_result['data']
+        context['keyword'] = keyword
 
-    for item in items:
-        # 실제로 사용할 데이터
-        id_num = item['id']
-        rank = item['rank']
-        duration = item['duration']
-        title = item['title_short']
-        artist = item['artist']['name']
-        preview = item['preview']
-        artist_picture_small = item['artist']['picture_small']
-        artist_picture_medium = item['artist']['picture_medium']
-        artist_picture_big = item['artist']['picture_big']
+        items = search_result['data']
+        pprint(items)
+        for item in items:
+            # 실제로 사용할 데이터
+            artist = item['artist']['name']
+            title = item['title']
+            preview = item['preview']
+            artist_picture = item['artist']['picture_small']
+            album_picture = item['album']['cover_small']
 
-        album_picture_small = item['album']['cover_small']
-        album_picture_medium = item['album']['cover_medium']
-        album_picture_big = item['album']['cover_big']
-
-
-        cur_item_dict = {
-            'id_num': id_num,
-            'rank': rank,
-            'duration': duration,
-            'artist': artist,
-            'title': title,
-            'preview': preview,
-
-            'artist_picture_small': artist_picture_small,
-            'artist_picture_medium': artist_picture_medium,
-            'artist_picture_big': artist_picture_big,
-
-            'album_picture_small': album_picture_small,
-            'album_picture_medium': album_picture_medium,
-            'album_picture_big': album_picture_big,
-
-        }
+            cur_item_dict = {
+                'artist': artist,
+                'title': title,
+                'preview': preview,
+                'artist_picture': artist_picture,
+                'album_picture': album_picture,
+            }
+            musics.append(cur_item_dict)
+            pprint(musics)
 
 
-        data = musics.append(cur_item_dict)
-        # print('data: {}'.format(data))
-        # jdata = musics.append(cur_item_dict)
-        # bio_data = BytesIO(jdata)
-        # data = JSONParser().parse(bio_data)
 
-    if request.method == 'GET':
-        musics = Music.objects.all()
-        serializer = MusicSerializer(musics, many=True)
-        return Response(serializer.data)
-
-    elif request.method == 'POST':
-        # serializer = MusicSerializer(data=request.data, many=True)
-        serializer = MusicSerializer(data=musics, many=True)
-
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    return render(request, 'music/search.html', context)

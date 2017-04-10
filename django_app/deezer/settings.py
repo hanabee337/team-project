@@ -36,8 +36,6 @@ TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 CONFIG_FILE_COMMON = os.path.join(CONF_DIR, 'settings_common.json')
 # print('CONFIG_FILE_COMMON:{}'.format(CONFIG_FILE_COMMON))
 
-
-
 # 2. settings_local.json의 경로를 CONFIG_FILE에 할당
 CONFIG_FILE_NAME = 'settings_local.json' if DEBUG else 'settings_deploy.json'
 # print('CONFIG_FILE_NAME:{}'.format(CONFIG_FILE_NAME))
@@ -49,6 +47,7 @@ config_file = open(os.path.join(CONF_DIR, CONFIG_FILE_NAME)).read()
 config_common = json.loads(open(CONFIG_FILE_COMMON).read())
 # print('config_common:{}'.format(config_common))
 
+
 # 4. CONFIG_FILE경로의 파일을 읽어 json.loads()한 결과를 config에 할당
 config = json.loads(config_file)
 # pprint('config:{}'.format(config))
@@ -59,7 +58,7 @@ for key, key_dict in config_common.items():
         config[key] = {}
     for inner_key, inner_key_dict in key_dict.items():
         config[key][inner_key] = inner_key_dict
-# print(config)
+print(config)
 
 
 # static
@@ -111,9 +110,6 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
         # 'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
-    ),
-    'DEFAULT_PARSER_CLASSES': (
-        'rest_framework.parsers.JSONParser',
     )
 }
 
