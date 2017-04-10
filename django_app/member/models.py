@@ -32,7 +32,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     )
 
     # username = models.CharField(max_length=255, unique=True)
-    nickname = models.CharField(max_length=255, blank=False, null=False)
+    nickname = models.CharField(max_length=255, unique=True)
     email = models.EmailField(unique=True)
     gender = models.CharField(max_length=1, choices=CHOICES_GENDER)
     age = models.IntegerField(blank=True, null=True)

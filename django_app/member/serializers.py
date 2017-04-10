@@ -36,6 +36,12 @@ class SignupSerializer(serializers.Serializer):
                 _("A user is already registered with this e-mail address. so try another one"))
         return email
 
+    def validate_nickname(self, nickname):
+        if UserModel.objects.filter(nickname__iexact=nickname).exists():
+            raise serializers.ValidationError(
+                _("A user is already registered with this nickname. so try another one"))
+        return nickname
+
     def validate(self, attrs):
         password1 = attrs.get('password1')
         password2 = attrs.get('password2')
