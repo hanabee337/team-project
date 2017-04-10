@@ -17,13 +17,14 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 import search.apis.urls
-from member.apis.login import LogoutView
 from member.urls import apis as member_apis_urls
-from member.urls import views as member_view_urls
+from playlist.urls import apis as playlist_apis_urls
 from . import views
 
 api_urlpatterns = [
     url(r'^member/', include(member_apis_urls)),
+    # 정호 추가
+    url(r'^playlist/', include(playlist_apis_urls)),
 ]
 
 urlpatterns = [
@@ -31,14 +32,10 @@ urlpatterns = [
 
     # local-server용 urls
     url(r'^$', views.index, name='index'),
-    url(r'^member/', include(member_view_urls)),
     url(r'^playlist/', include('playlist.urls')),
 
     # api용 urls
     url(r'^apis/', include(api_urlpatterns, namespace='apis')),
-
-    # rest-framework login/logout url
-    url(r'^apis-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
     # apis/search urls
     url(r'^apis-search/', include(search.apis.urls, namespace='apis-search')),

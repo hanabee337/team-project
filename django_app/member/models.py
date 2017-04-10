@@ -1,56 +1,24 @@
-from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
-from django.contrib.auth.models import PermissionsMixin
+from django.conf import settings
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
-class MyUserManager(BaseUserManager):
-    def _create_user(self, nickname, email, password, **extra_fields):
-        if not email:
-            raise ValueError('The given email must be set')
-
-        # username을 email로(email을 user id로 사용)
-        user = self.model(nickname=nickname, email=email, **extra_fields)
-        user.set_password(password)
-        user.save()
-        return user
-
-    def create_user(self, nickname=None, email=None, password=None, **extra_fields):
-        extra_fields.setdefault('is_staff', False)
-        extra_fields.setdefault('is_superuser', False)
-        return self._create_user(nickname, email, password, **extra_fields)
-
-    def create_superuser(self, nickname, email, password, **extra_fields):
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
-        return self._create_user(nickname, email, password, **extra_fields)
+# Create your models here.
 
 
-class MyUser(AbstractBaseUser, PermissionsMixin):
-    CHOICES_GENDER = (
-        ('M', 'Male'),
-        ('F', 'Female'),
-    )
+class MyUser(AbstractUser):
+    pass
+    # user_playlist = models.ManyToManyField(
+    #     'playlist.PlayList',
+    #     blank=True,
+    #     through='UserPlayList',
+    #     related_name='playlist_user_set'
+    # )
+#
+#
+# class UserPlayList(models.Model):
+#     user = models.ForeignKey(settings.AUTH_USER_MODEL)
+#     playlist = models.ForeignKey('playlist.PlayList')
+#     created_date = models.DateTimeField(auto_now_add=True)
+#
 
-    # username = models.CharField(max_length=255, unique=True)
-    nickname = models.CharField(max_length=255, blank=False, null=False)
-    email = models.EmailField(unique=True)
-    gender = models.CharField(max_length=1, choices=CHOICES_GENDER)
-    age = models.IntegerField(blank=True, null=True)
-
-    is_staff = models.BooleanField(default=False)
-
-    password = models.CharField(max_length=255)
-
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['nickname']
-
-    objects = MyUserManager()
-
-    def __str__(self):
-        return self.email
-
-    def get_full_name(self):
-        return self.email
-
-    def get_short_name(self):
-        return self.email
