@@ -3,11 +3,11 @@
 
 ### custom ###
 .gitignore
-.conf/
+#.conf/
 .conf-secret/
 _Dockerifile*
 django_app/static/css/
-django_app/deezer/settings.py
+#django_app/deezer/settings.py
 
 ### bower packages
 bower_components/
