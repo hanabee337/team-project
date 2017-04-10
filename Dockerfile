@@ -1,17 +1,14 @@
-FROM        eb-base
+FROM        ubuntu:16.04
 MAINTAINER  hanabee337@gmail.com
-
-#RUN         apt-get -y update
-#RUN         apt-get -y install python3
-#RUN         apt-get -y install python3-pip
-#RUN         apt-get -y install nginx
-
-#WORKDIR     /srv
-#RUN         mkdir app
-#WORKDIR     /srv/app
 
 COPY        . /srv/app
 WORKDIR     /srv/app
+
+RUN         apt-get -y update
+RUN         apt-get -y install python3
+RUN         apt-get -y install python3-pip
+RUN         apt-get -y install nginx
+RUN         apt-get -y install supervisor
 
 RUN         pip3 install -r requirements.txt
 RUN         pip3 install uwsgi
