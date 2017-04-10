@@ -5,7 +5,7 @@ from search import views
 
 app_name = 'search'
 urlpatterns = [
-    url(r'^search', views.search, name='music_search'),
+    url(r'^search/', views.search, name='music_search'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
