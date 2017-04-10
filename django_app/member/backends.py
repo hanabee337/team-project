@@ -68,7 +68,7 @@ class UserModelBackend(object):
     """
 
     def authenticate(self, email=None, password=None, **kwargs):
-        print('\nUserModelBackend authenticate\n')
+        # print('\nUserModelBackend authenticate\n')
 
         UserModel = get_user_model()
         if email is None:
