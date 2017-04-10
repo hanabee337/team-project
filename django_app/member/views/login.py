@@ -53,7 +53,7 @@ def login_instagram(request):
         print(code)
 
         # Step Three: Request the access_token with 'code'
-        url_access_token = 'https://apis.instagram.com/oauth/access_token'
+        url_access_token = 'https://api.instagram.com/oauth/access_token'
         data = {
             'client_id': CLIENT_ID,
             'client_secret': CLIENT_SECRET,
