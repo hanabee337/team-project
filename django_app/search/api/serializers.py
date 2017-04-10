@@ -8,7 +8,7 @@ class MusicListSerializer(serializers.ModelSerializer):
         model = Music
         fields = (
             "id_num",
-            "rank"
+            "rank",
             "duration",
             "artist",
             "title",
@@ -29,7 +29,7 @@ class MusicCreateSerializer(serializers.ModelSerializer):
         model = Music
         fields = (
             "id_num",
-            "rank"
+            "rank",
             "duration",
             "artist",
             "title",

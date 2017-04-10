@@ -16,7 +16,7 @@ def search(request, format=None):
     context = {
         'musics': musics,
     }
-    r = requests.get('https://api.deezer.com/search?q=cindy')
+    r = requests.get('https://api.deezer.com/search?q=mraz')
     result = r.text
     result_dict = json.loads(result)
 
