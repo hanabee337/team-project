@@ -1,22 +1,20 @@
-FROM        eb-base
+FROM        ubuntu:16.04
 MAINTAINER  hanabee337@gmail.com
 
-#RUN         apt-get -y update
-#RUN         apt-get -y install python3
-#RUN         apt-get -y install python3-pip
-#RUN         apt-get -y install nginx
 
-#WORKDIR     /srv
-#RUN         mkdir app
-#WORKDIR     /srv/app
+RUN         apt-get -y update
+RUN         apt-get -y install python3
+RUN         apt-get -y install python3-pip
+RUN         apt-get -y install nginx
+RUN         apt-get -y install supervisor
+
+RUN         pip3 install django
+RUN         pip3 install uwsgi
 
 COPY        . /srv/app
 WORKDIR     /srv/app
 
 RUN         pip3 install -r requirements.txt
-RUN         pip3 install uwsgi
-#WORKDIR     /srv/app/django_app
-#CMD         ["python3", "manage.py", "runserver", "0:8080"]
 
 COPY        .conf/uwsgi-app.ini         /etc/uwsgi/sites/app.ini
 COPY        .conf/nginx.conf            /etc/nginx/nginx.conf
