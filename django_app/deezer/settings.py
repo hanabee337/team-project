@@ -58,7 +58,7 @@ for key, key_dict in config_common.items():
         config[key] = {}
     for inner_key, inner_key_dict in key_dict.items():
         config[key][inner_key] = inner_key_dict
-print(config)
+# print(config)
 
 
 # static
