@@ -16,13 +16,17 @@ def search(request, format=None):
     context = {
         'musics': musics,
     }
-    r = requests.get('https://api.deezer.com/search?q=mraz')
+    # singers = {
+    #     'cindy', 'talyor swift', 'michael'
+    # }
+    # for singer in singers:
+
+    r = requests.get('https://api.deezer.com/search?q=sheeran')
     result = r.text
     result_dict = json.loads(result)
 
     search_result = result_dict
-
-    # context['keyword'] = keyword
+    pprint(search_result)
 
     items = search_result['data']
 
@@ -41,6 +45,7 @@ def search(request, format=None):
         album_picture_small = item['album']['cover_small']
         album_picture_medium = item['album']['cover_medium']
         album_picture_big = item['album']['cover_big']
+
 
 
         cur_item_dict = {
@@ -63,10 +68,11 @@ def search(request, format=None):
 
 
         data = musics.append(cur_item_dict)
-        # print('data: {}'.format(data))
-        # jdata = musics.append(cur_item_dict)
-        # bio_data = BytesIO(jdata)
-        # data = JSONParser().parse(bio_data)
+
+    # print('data: {}'.format(data))
+    # jdata = musics.append(cur_item_dict)
+    # bio_data = BytesIO(jdata)
+    # data = JSONParser().parse(bio_data)
 
     if request.method == 'GET':
         musics = Music.objects.all()

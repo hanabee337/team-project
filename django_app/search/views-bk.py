@@ -16,6 +16,7 @@ def search(request, format=None):
     context = {
         'musics': musics,
     }
+
     singers = {
         'cindy', 'talyor swift', 'michael'
     }

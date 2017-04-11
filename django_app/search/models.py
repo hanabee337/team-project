@@ -18,5 +18,7 @@ class Music(models.Model):
     album_picture_big = models.TextField(max_length=500)
 
 
+
+
     def __str__(self):
         return self.title
