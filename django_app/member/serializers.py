@@ -12,9 +12,10 @@ class SignupSerializer(serializers.Serializer):
         style={'input_type': 'password'},
         min_length=8
     )
-    # extra_kwargs = {
-    #     'password': {'write_only': True}
-    # }
+    # password2 = serializers.CharField(
+    #     style={'input_type': 'password'},
+    #     min_length=8
+    # )
     email = serializers.EmailField()
     nickname = serializers.CharField(max_length=255, required=True)
     gender = serializers.ChoiceField(choices=UserModel.CHOICES_GENDER, required=False)
@@ -26,7 +27,29 @@ class SignupSerializer(serializers.Serializer):
             # 'username',
             'nickname', 'email',
             'gender', 'age', 'password',
+            # 'password2'
         )
+
+    def validate_email(self, email):
+        # print('\nvalidate_email\n')
+        if UserModel.objects.filter(email__iexact=email).exists():
+            raise serializers.ValidationError(
+                _("A user is already registered with this e-mail address. so try another one"))
+        return email
+
+    def validate_nickname(self, nickname):
+        if UserModel.objects.filter(nickname__iexact=nickname).exists():
+            raise serializers.ValidationError(
+                _("A user is already registered with this nickname. so try another one"))
+        return nickname
+
+    # def validate(self, attrs):
+    #     password1 = attrs.get('password1')
+    #     password2 = attrs.get('password2')
+    #     if password1 != password2:
+    #         msg = _('Two passwords do not match. Are you sure?...')
+    #         raise exceptions.ValidationError(msg)
+    #     return attrs
 
     def create(self, validated_data):
         user = UserModel.objects.create_user(**validated_data)
@@ -45,7 +68,7 @@ class LoginSerializer(serializers.Serializer):
             'email', 'password',
         )
 
-    def _validate_email(self, email, password):
+    def _validate_password(self, email, password):
         user = None
 
         if email and password:
@@ -54,18 +77,24 @@ class LoginSerializer(serializers.Serializer):
             msg = _('Must include "email" and "password".')
             raise exceptions.ValidationError(msg)
 
-        return user
-
-    def _validate_username(self, username, password):
-        user = None
-
-        if username and password:
-            user = authenticate(username=username, password=password)
-        else:
-            msg = _('Must include "username" and "password".')
+        if user is None:
+            # we assume that email is already validated in 'validate_email',
+            # so, we assume that only password does not match
+            msg = _('Your password does not match. Are your sure?')
             raise exceptions.ValidationError(msg)
 
         return user
+
+    # def _validate_username(self, username, password):
+    #     user = None
+    #
+    #     if username and password:
+    #         user = authenticate(username=username, password=password)
+    #     else:
+    #         msg = _('Must include "username" and "password".')
+    #         raise exceptions.ValidationError(msg)
+    #
+    #     return user
 
     def _validate_username_email(self, username, email, password):
         user = None
@@ -80,7 +109,19 @@ class LoginSerializer(serializers.Serializer):
 
         return user
 
+    def validate_email(self, email):
+        # print('validate_email:{}'.format(email))
+
+        try:
+            UserModel.objects.get(email__iexact=email).get_username()
+        except UserModel.DoesNotExist:
+            msg = _('A user using this email does not exist, check the email again.')
+            raise exceptions.ValidationError(msg)
+        return email
+
     def validate(self, attrs):
+        # print('\nvalidate:{}'.format(attrs))
+
         username = attrs.get('username')
         email = attrs.get('email')
         password = attrs.get('password')
@@ -109,6 +150,8 @@ class LoginSerializer(serializers.Serializer):
                     username = UserModel.objects.get(email__iexact=email).get_username()
                 except UserModel.DoesNotExist:
                     pass
+
+                user = self._validate_password(email, password)
 
             if username:
                 user = self._validate_username_email(username, '', password)

@@ -32,14 +32,17 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     )
 
     # username = models.CharField(max_length=255, unique=True)
-    nickname = models.CharField(max_length=255, blank=False, null=False)
+    nickname = models.CharField(max_length=255, unique=True)
     email = models.EmailField(unique=True)
     gender = models.CharField(max_length=1, choices=CHOICES_GENDER)
     age = models.IntegerField(blank=True, null=True)
 
     is_staff = models.BooleanField(default=False)
 
-    password = models.CharField(max_length=255)
+    # password1 = models.CharField(max_length=255)
+    # password2 = models.CharField(max_length=255)
+
+    img_profile = models.ImageField(upload_to='user', blank=True)
 
     img_profile = models.ImageField(upload_to='user', blank=True)
 

@@ -1,5 +1,4 @@
 """deezer URL Configuration
-
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/1.10/topics/http/urls/
 Examples:
@@ -14,17 +13,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url, include
+from django.conf.urls.static import static
 from django.contrib import admin
 
-import search.apis.urls
+
+from deezer import settings
 from member.urls import apis as member_apis_urls
-from playlist.urls import apis as playlist_apis_urls
-from playlist.urls import views as playlist_urls
+from member.urls import views as member_view_urls
 from . import views
 
 api_urlpatterns = [
     url(r'^member/', include(member_apis_urls)),
-    url(r'^playlist/', include(playlist_apis_urls)),
+    # api/search/
+    url(r'^search/', include('search.api.urls', namespace='api-search')),
 ]
 
 urlpatterns = [
@@ -32,11 +33,20 @@ urlpatterns = [
 
     # local-server용 urls
     url(r'^$', views.index, name='index'),
-    url(r'^playlist/', include(playlist_urls)),
+    url(r'^member/', include(member_view_urls)),
 
     # api용 urls
-    url(r'^apis/', include(api_urlpatterns, namespace='apis')),
+    url(r'^api/', include(api_urlpatterns, namespace='api')),
 
-    # apis/search urls
-    url(r'^apis-search/', include(search.apis.urls, namespace='apis-search')),
+    # rest-framework login/logout url
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+
+    # local search route
+    url(r'^local/', include('search.urls')),
 ]
+
+if settings.DEBUG and settings.STORAGE_S3 is False:
+    urlpatterns += static(
+        settings.MEDIA_URL,
+        document_root=settings.MEDIA_ROOT
+    )

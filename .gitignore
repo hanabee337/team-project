@@ -1,13 +1,10 @@
-
 # Created by https://www.gitignore.io/api/pycharm,django,python
 
-### custom ###
-.gitignore
-#.conf/
+### project custom ###
 .conf-secret/
-_Dockerifile*
+#_Dockerfile*
 django_app/static/css/
-#django_app/deezer/settings.py
+static_root/
 
 ### bower packages
 bower_components/
@@ -164,3 +161,8 @@ ENV/
 .ropeproject
 
 # End of https://www.gitignore.io/api/pycharm,django,python
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
