@@ -9,53 +9,48 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import json
 import os
 
-DEBUG = os.environ.get('MODE') == 'DEBUG'
-STORAGE_S3 = os.environ.get('STORAGE') == 'S3' or DEBUG is False
-DB_RDS = os.environ.get('DB') == 'RDS'
-print('DEBUG:{}'.format(DEBUG))
-print('STORAGE_S3:{}'.format(STORAGE_S3))
-print('DB_RDS:{}'.format(DB_RDS))
+# 추가
+DEBUG = True
+# 정지
+# DEBUG = os.environ.get('MODE') == 'DEBUG'
+# STORAGE_S3 = os.environ.get('STORAGE') == 'S3' or DEBUG is False
+# DB_RDS = os.environ.get('DB') == 'RDS'
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ROOT_DIR = os.path.dirname(BASE_DIR)
 
+
 # .conf-secret
-CONF_DIR = os.path.join(ROOT_DIR, '.conf-secret')
-# print('CONF_DIR:{}'.format(CONF_DIR))
+# 수정
+CONF_DIR = os.path.join(ROOT_DIR, '.conf')
+# CONF_DIR = os.path.join(ROOT_DIR, '.conf-secret')
 # config = json.loads(open(os.path.join(CONF_DIR, 'settings_local.json')).read())
-# print('config:{}'.format(config))
+
 
 # templates
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 
-# 1. settings_common.json의 경로를 CONFIG_FILE_COMMON에 할당
-CONFIG_FILE_COMMON = os.path.join(CONF_DIR, 'settings_common.json')
-# print('CONFIG_FILE_COMMON:{}'.format(CONFIG_FILE_COMMON))
 
-# 2. settings_local.json의 경로를 CONFIG_FILE에 할당
-CONFIG_FILE_NAME = 'settings_local.json' if DEBUG else 'settings_deploy.json'
-# print('CONFIG_FILE_NAME:{}'.format(CONFIG_FILE_NAME))
-
-config_file = open(os.path.join(CONF_DIR, CONFIG_FILE_NAME)).read()
-# print('config_file:{}'.format(config_file))
-
-# 3. CONFIG_FILE_COMMON경로의 파일을 읽어 json.loads()한 결과를 config_common에 할당
-config_common = json.loads(open(CONFIG_FILE_COMMON).read())
-# print('config_common:{}'.format(config_common))
+# CONFIG_FILE_COMMON = os.path.join(CONF_DIR, 'settings_common.json')
+# config_common = json.loads(open(CONFIG_FILE_COMMON).read())
+#
+# CONFIG_FILE_NAME = 'settings_local.json' if DEBUG else 'settings_deploy.json'
+# config_file = open(os.path.join(CONF_DIR, CONFIG_FILE_NAME)).read()
 
 
-# 4. CONFIG_FILE경로의 파일을 읽어 json.loads()한 결과를 config에 할당
-config = json.loads(config_file)
-# pprint('config:{}'.format(config))
+# 수정
+# config = json.loads(config_file)
+config = json.loads(open(os.path.join(CONF_DIR, 'settings_local.json')).read())
+
 
 # config_common의 내용을 현재 config에 합침
-for key, key_dict in config_common.items():
-    if not config.get(key):
-        config[key] = {}
-    for inner_key, inner_key_dict in key_dict.items():
-        config[key][inner_key] = inner_key_dict
-# print(config)
+# for key, key_dict in config_common.items():
+#     if not config.get(key):
+#         config[key] = {}
+#     for inner_key, inner_key_dict in key_dict.items():
+#         config[key][inner_key] = inner_key_dict
 
 
 # static
@@ -64,43 +59,58 @@ STATICFILES_DIRS = [
     STATIC_DIR,
 ]
 
+
+# 정지
 # AWS
-AWS_ACCESS_KEY_ID = config['aws']['access_key_id']
-AWS_SECRET_ACCESS_KEY = config['aws']['secret_access_key']
+# AWS_ACCESS_KEY_ID = config['aws']['access_key_id']
+# AWS_SECRET_ACCESS_KEY = config['aws']['secret_access_key']
+#
+# AWS_S3_HOST = 's3.{}.amazonaws.com'.format(config['aws']['s3_region'])
+# AWS_S3_SIGNATURE_VERSION = config['aws']['s3_signature_version']
+# AWS_STORAGE_BUCKET_NAME = config['aws']['s3_storage_bucket_name']
+# AWS_S3_CUSTOM_DOMAIN = '{}.s3.amazonaws.com'.format(AWS_STORAGE_BUCKET_NAME)
 
-AWS_S3_HOST = 's3.{}.amazonaws.com'.format(config['aws']['s3_region'])
-AWS_S3_SIGNATURE_VERSION = config['aws']['s3_signature_version']
-AWS_STORAGE_BUCKET_NAME = config['aws']['s3_storage_bucket_name']
-AWS_S3_CUSTOM_DOMAIN = '{}.s3.amazonaws.com'.format(AWS_STORAGE_BUCKET_NAME)
 
-if STORAGE_S3:
-    # static files
-    STATICFILES_STORAGE = 'deezer.storages.StaticStorage'
-    STATICFILES_LOCATION = 'static'
-    STATIC_URL = 'https://{custom_domain}/{staticfiles_location}/'.format(
-        custom_domain=AWS_S3_CUSTOM_DOMAIN,
-        staticfiles_location=STATICFILES_LOCATION
-    )
-    # media files
-    DEFAULT_FILE_STORAGE = 'deezer.storages.MediaStorage'
-    MEDIAFILES_LOCATION = 'media'
-    MEDIA_URL = 'https://{custom_domain}/{mediafiles_location}/'.format(
-        custom_domain=AWS_S3_CUSTOM_DOMAIN,
-        mediafiles_location=MEDIAFILES_LOCATION
-    )
-else:
-    STATIC_ROOT = os.path.join(ROOT_DIR, 'static_root')
-    STATIC_URL = '/static/'
-    # media
-    MEDIA_URL = '/media/'
-    MEDIA_ROOT = os.path.join(ROOT_DIR, 'media')
+# 수정
+# if STORAGE_S3:
+#     # static files
+#     STATICFILES_STORAGE = 'deezer.storages.StaticStorage'
+#     STATICFILES_LOCATION = 'static'
+#     STATIC_URL = 'https://{custom_domain}/{staticfiles_location}/'.format(
+#         custom_domain=AWS_S3_CUSTOM_DOMAIN,
+#         staticfiles_location=STATICFILES_LOCATION
+#     )
+#     # media files
+#     DEFAULT_FILE_STORAGE = 'deezer.storages.MediaStorage'
+#     MEDIAFILES_LOCATION = 'media'
+#     MEDIA_URL = 'https://{custom_domain}/{mediafiles_location}/'.format(
+#         custom_domain=AWS_S3_CUSTOM_DOMAIN,
+#         mediafiles_location=MEDIAFILES_LOCATION
+#     )
+# else:
+#     STATIC_ROOT = os.path.join(ROOT_DIR, 'static_root')
+#     STATIC_URL = '/static/'
+#     # media
+#     MEDIA_URL = '/media/'
+#     MEDIA_ROOT = os.path.join(ROOT_DIR, 'media')
+STATIC_ROOT = os.path.join(ROOT_DIR, 'static_root')
+STATIC_URL = '/static/'
 
+
+# media
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(ROOT_DIR, 'media')
+
+
+# 수정
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config['django']['secret_key']
+SECRET_KEY = config['settings']['secret_key']
 
-# print('SECRET_KEY:{}'.format(SECRET_KEY))
 
-ALLOWED_HOSTS = config['django']['allowed_hosts']
+# 수정
+ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = config['django']['allowed_hosts']
+
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -170,31 +180,36 @@ TEMPLATES = [
     },
 ]
 
+
 WSGI_APPLICATION = 'deezer.wsgi.application'
+
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
-if DEBUG and DB_RDS:
-    # DEBUG모드이며 DB_RDS옵션일 경우, 로컬 postgreSQL이 아닌 RDS로 접속해 테스트한다.
-    config_db = config['db_rds']
-else:
-    # 그 외의 경우에는 해당 db설정을 따른다.
-    config_db = config['db']
+# 정지
+# if DEBUG and DB_RDS:
+#     # DEBUG모드이며 DB_RDS옵션일 경우, 로컬 postgreSQL이 아닌 RDS로 접속해 테스트한다.
+#     config_db = config['db_rds']
+# else:
+#     # 그 외의 경우에는 해당 db설정을 따른다.
+#     config_db = config['db']
 
+
+# 수정
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    # }
-
     'default': {
-        'ENGINE': config_db['engine'],
-        'NAME': config_db['name'],
-        'USER': config_db['user'],
-        'PASSWORD': config_db['password'],
-        'HOST': config_db['host'],
-        'PORT': config_db['port']
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
+
+    # 'default': {
+    #     'ENGINE': config_db['engine'],
+    #     'NAME': config_db['name'],
+    #     'USER': config_db['user'],
+    #     'PASSWORD': config_db['password'],
+    #     'HOST': config_db['host'],
+    #     'PORT': config_db['port']
+    # }
 }
 
 # Password validation
