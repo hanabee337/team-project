@@ -23,7 +23,6 @@ class LoginView(RestLoginView):
     if the credentials are valid and authenticated.
     Calls Django Auth login method to register User ID
     in Django session framework
-
     Accept the following POST parameters: username, password
     Return the REST Framework Token Object's key.
     """
