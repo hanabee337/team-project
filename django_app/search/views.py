@@ -1,11 +1,10 @@
 import json
-from pprint import pprint
 
 import requests
-
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+
 from search.models import Music
 from search.serializers import MusicSerializer
 
@@ -13,14 +12,12 @@ from search.serializers import MusicSerializer
 @api_view(['GET', 'POST'])
 def search(request, format=None):
     musics = []
-    context = {
-        'musics': musics,
-    }
+
     singers = {
-        'drake', 'ed sheeran', 'kodak black', 'brono mars', 'sound track',
+        'drake', 'rick ross', 'big sean',
+        'ed sheeran', 'kodak black', 'brono mars', 'sound track',
         'mastodon', 'future', 'migos', 'mercyme', 'the weeknd',
-        'miranda lambert', 'keith urban', 'post malone', 'khalid',
-        'rick ross', 'big sean'
+        'miranda lambert', 'keith urban', 'post malone', 'khalid'
     }
 
     for singer in singers:
@@ -36,7 +33,7 @@ def search(request, format=None):
         # pprint('items: {}'.format(items))
 
         for item in items:
-        # 실제로 사용할 데이터
+            # 실제로 사용할 데이터
             id_num = item['id']
             rank = item['rank']
             duration = item['duration']
@@ -50,8 +47,6 @@ def search(request, format=None):
             album_picture_small = item['album']['cover_small']
             album_picture_medium = item['album']['cover_medium']
             album_picture_big = item['album']['cover_big']
-
-
 
             cur_item_dict = {
                 'id_num': id_num,
@@ -71,9 +66,8 @@ def search(request, format=None):
 
             }
 
-
             data = musics.append(cur_item_dict)
-            pprint('musics: {}'.format(musics))
+            # pprint('musics: {}'.format(musics))
     # jdata = musics.append(cur_item_dict)
     # bio_data = BytesIO(jdata)
     # data = JSONParser().parse(bio_data)
