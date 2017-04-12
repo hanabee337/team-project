@@ -11,7 +11,6 @@ __all__ = (
 
 class PlayListSerializer(serializers.ModelSerializer):
     author = UserInfoSerializer(read_only=True)
-    # music_set = MusicListSerializer(many=True, read_only=True)
 
     class Meta:
         model = PlayList

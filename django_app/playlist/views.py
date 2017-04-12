@@ -10,29 +10,33 @@ from search.models import Music
 
 @api_view(['GET', 'POST'])
 def select_my_playlist(request, format=None):
-    q = PlayList.objects.filter(author=request.user)
-    serializer = PlayListSerializer(q, many=True)
-    return Response(serializer.data, status=status.HTTP_201_CREATED)
+    if request.method == 'GET':
+        playlist = PlayList.objects.filter(author=request.user)
+        serializer = PlayListSerializer(playlist, many=True)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 @api_view(['GET', 'POST'])
 def add_to_my_playlist(request, format=None):
     playlist_id = request.data.get('playlist_id')
-    music_id = request.data.get('music_id')
+    music_id_num = request.data.get('music_id_num')
     playlist = PlayList.objects.get(pk=playlist_id)
-    music = Music.objects.get(pk=music_id)
-    # playlist.playlist_music.add(music)
-    playlistmusic = PlayListMusic.objects.create(
-        playlist=playlist,
-        music=music,
-    )
-    serializer = AddToMyPlayListSerializer(playlistmusic)
-    return Response(serializer.data, status=status.HTTP_201_CREATED)
+    music = Music.objects.get(id_num=music_id_num)
 
-    # user = request.user
-    # playlist_id = request.data.get('playlist')
-    # ret = {
-    #     'user': user.pk,
-    #     'playlist_id': playlist_id
-    # }
-    # return Response(ret)
+    if request.method == 'POST':
+        playlistmusic = PlayListMusic.objects.create(
+            playlist=playlist,
+            music=music,
+        )
+        serializer = AddToMyPlayListSerializer(playlistmusic)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+
+        # user = request.user
+        # playlist_id = request.data.get('playlist')
+        # ret = {
+        #     'user': user.pk,
+        #     'playlist_id': playlist_id
+        # }
+        # return Response(ret)
