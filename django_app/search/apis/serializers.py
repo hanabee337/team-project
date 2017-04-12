@@ -8,9 +8,7 @@ class MusicListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Music
         fields = (
-            # 정호 추가 pk, playlist
-            'pk',
-            'playlist',
+            "pk",
             "artist",
             "title",
             "preview",
@@ -22,9 +20,7 @@ class MusicCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Music
         fields = (
-            # 정호 추가 pk, playlist
-            'pk',
-            'playlist',
+            "pk",
             "artist",
             "title",
             "preview",

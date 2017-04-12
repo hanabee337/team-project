@@ -19,11 +19,11 @@ from django.contrib import admin
 import search.apis.urls
 from member.urls import apis as member_apis_urls
 from playlist.urls import apis as playlist_apis_urls
+from playlist.urls import views as playlist_urls
 from . import views
 
 api_urlpatterns = [
     url(r'^member/', include(member_apis_urls)),
-    # 정호 추가
     url(r'^playlist/', include(playlist_apis_urls)),
 ]
 
@@ -32,7 +32,7 @@ urlpatterns = [
 
     # local-server용 urls
     url(r'^$', views.index, name='index'),
-    url(r'^playlist/', include('playlist.urls')),
+    url(r'^playlist/', include(playlist_urls)),
 
     # api용 urls
     url(r'^apis/', include(api_urlpatterns, namespace='apis')),

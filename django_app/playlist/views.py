@@ -1,49 +1,38 @@
-from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.shortcuts import render, redirect
-from django.views.decorators.csrf import csrf_exempt
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from playlist.models import PlayList
+from playlist.models import PlayListMusic
+from playlist.serializers import PlayListSerializer, AddToMyPlayListSerializer
+from search.models import Music
 
 
-@csrf_exempt
-@login_required
-def list(request):
-    all_playlists = request.user.userplaylist_set.select_related('playlist')
-    paginator = Paginator(all_playlists, 50)
-    page = request.GET.get('page')
-
-    try:
-        playlists = paginator.page(page)
-    except PageNotAnInteger:
-        playlists = paginator.page(1)
-    except EmptyPage:
-        playlists = paginator.page(paginator.num_pages)
-
-    context = {
-        'playlists': playlists,
-    }
-    return render(request, 'playlist/list.html', context)
+@api_view(['GET', 'POST'])
+def select_my_playlist(request, format=None):
+    q = PlayList.objects.filter(author=request.user)
+    serializer = PlayListSerializer(q, many=True)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-@csrf_exempt
-@login_required
-def playlist_making(request):
-    if request.method == 'POST':
-        title = request.POST['title']
-        # published_date_str = request.POST['published_date']
-        # published_date = parse(published_date_str)
+@api_view(['GET', 'POST'])
+def add_to_my_playlist(request, format=None):
+    playlist_id = request.data.get('playlist_id')
+    music_id = request.data.get('music_id')
+    playlist = PlayList.objects.get(pk=playlist_id)
+    music = Music.objects.get(pk=music_id)
+    # playlist.playlist_music.add(music)
+    playlistmusic = PlayListMusic.objects.create(
+        playlist=playlist,
+        music=music,
+    )
+    serializer = AddToMyPlayListSerializer(playlistmusic)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        exist_playlist = request.user.userplaylist_set.filter(
-            playlist__title=title)
-        if exist_playlist:
-            pass
-        else:
-            playlist = PlayList.objects.create(
-                title=title,
-                # published_date=published_date
-            )
-            request.user.userplaylist_set.create(
-                playlist=playlist
-            )
-        return redirect('playlist:list')
+    # user = request.user
+    # playlist_id = request.data.get('playlist')
+    # ret = {
+    #     'user': user.pk,
+    #     'playlist_id': playlist_id
+    # }
+    # return Response(ret)

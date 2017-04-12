@@ -1,17 +1,17 @@
 from rest_framework import serializers
 
-from member.serializers import UserSerializer
-from playlist.models.playlist import PlayList
-from search.apis.serializers import MusicListSerializer
+from member.serializers import UserInfoSerializer
+from playlist.models.playlist import PlayList, PlayListMusic
 
 __all__ = (
     'PlayListSerializer',
+    'AddToMyPlayListSerializer',
 )
 
 
 class PlayListSerializer(serializers.ModelSerializer):
-    author = UserSerializer(read_only=True)
-    music_set = MusicListSerializer(many=True, read_only=True)
+    author = UserInfoSerializer(read_only=True)
+    # music_set = MusicListSerializer(many=True, read_only=True)
 
     class Meta:
         model = PlayList
@@ -19,8 +19,23 @@ class PlayListSerializer(serializers.ModelSerializer):
             'pk',
             'author',
             'title',
+            'image',
+            'playlist_music',
+        )
+        read_only_fields = (
+            # 'author',
+        )
+        depth = 1
+
+
+class AddToMyPlayListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PlayListMusic
+        fields = (
+            'pk',
+            'playlist',
+            'music',
             'created_date',
-            'music_set',
         )
         read_only_fields = (
             'created_date',

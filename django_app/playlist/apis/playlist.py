@@ -13,7 +13,7 @@ __all__ = (
 class PlayListListView(generics.ListCreateAPIView):
     queryset = PlayList.objects.all()
     serializer_class = PlayListSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    permission_classes = (permissions.IsAuthenticated,)
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -22,3 +22,4 @@ class PlayListListView(generics.ListCreateAPIView):
 class PlayListDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = PlayList.objects.all()
     serializer_class = PlayListSerializer
+    permission_classes = (permissions.IsAuthenticated,)

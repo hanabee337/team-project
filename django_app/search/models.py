@@ -2,8 +2,6 @@ from django.db import models
 
 
 class Music(models.Model):
-    # 정호 추가
-    playlist = models.ForeignKey('playlist.PlayList')
     artist = models.TextField(max_length=255)
     title = models.CharField(max_length=255)
     preview = models.TextField(max_length=500)
