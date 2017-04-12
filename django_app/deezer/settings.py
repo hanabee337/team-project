@@ -150,7 +150,6 @@ MIDDLEWARE = [
 
 CORS_ORIGIN_WHITELIST = (
     'localhost:8000',
-    'localhost:8000/signup',
 )
 
 ROOT_URLCONF = 'deezer.urls'
