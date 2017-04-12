@@ -1,9 +1,5 @@
 # Created by https://www.gitignore.io/api/pycharm,django,python
 
-# 추가
-.gitignore
-django_app/deezer/settings.py
-
 ### project custom ###
 .conf-secret/
 #_Dockerfile*

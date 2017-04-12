@@ -21,13 +21,3 @@ class MusicListAPIView(ListAPIView):
                 Q(artist__icontains=query)
             ).distinct()
         return queryset_list
-
-
-# 임시
-class MusicCreateAPIView(CreateAPIView):
-    queryset = Music.objects.all()
-    serializer_class = MusicCreateSerializer
-    permission_classes = [IsAuthenticated]
-
-    def perform_create(self, serializer):
-        serializer.save()
