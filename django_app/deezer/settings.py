@@ -108,7 +108,7 @@ ALLOWED_HOSTS = config['django']['allowed_hosts']
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.BasicAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     ),
     'PAGE_SIZE': 10
@@ -188,15 +188,15 @@ DATABASES = {
     #     'ENGINE': 'django.db.backends.sqlite3',
     #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     # }
-
     'default': {
         'ENGINE': config_db['engine'],
         'NAME': config_db['name'],
         'USER': config_db['user'],
         'PASSWORD': config_db['password'],
         'HOST': config_db['host'],
-        'PORT': config_db['port']
-    }
+        'PORT': config_db['port'],
+    },
+
 }
 
 # Password validation
