@@ -9,7 +9,7 @@ from .serializers import MusicListSerializer, MusicCreateSerializer
 class MusicListAPIView(ListAPIView):
     serializer_class = MusicListSerializer
     filter_backends = [SearchFilter, OrderingFilter]
-    search_fields = ['title', 'artist']
+    search_fields = ['title', 'artist', 'album_id', 'song_id']
 
     def get_queryset(self, *args, **kwargs):
         queryset_list = Music.objects.all()
@@ -17,7 +17,8 @@ class MusicListAPIView(ListAPIView):
         if query:
             queryset_list = queryset_list.filter(
                 Q(title__icontains=query) |
-                Q(artist__icontains=query)
+                Q(artist__icontains=query) |
+                Q(album_id__icontains=query)
             ).distinct()
         return queryset_list
 
