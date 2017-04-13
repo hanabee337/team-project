@@ -1,42 +1,24 @@
-from rest_framework import status
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
+from django.shortcuts import render
 
 from playlist.models import PlayList
 from playlist.models import PlayListMusic
-from playlist.serializers import PlayListSerializer, AddToMyPlayListSerializer
 from search.models import Music
 
 
-@api_view(['GET', 'POST'])
-def select_my_playlist(request, format=None):
-    if request.method == 'GET':
-        playlist = PlayList.objects.filter(author=request.user)
-        serializer = PlayListSerializer(playlist, many=True)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-
-@api_view(['GET', 'POST'])
-def add_to_my_playlist(request, format=None):
-    playlist_id = request.data.get('playlist_id')
-    music_id_num = request.data.get('music_id_num')
-    playlist = PlayList.objects.get(pk=playlist_id)
-    music = Music.objects.get(id_num=music_id_num)
-
+def views_add_to_my_playlist(request, format=None):
     if request.method == 'POST':
+        playlist_id = request.POST.get('playlist_id')
+        music_id_num = request.POST.get('music_id_num')
+        playlist = PlayList.objects.get(pk=playlist_id)
+        music = Music.objects.get(id_num=music_id_num)
         playlistmusic = PlayListMusic.objects.create(
             playlist=playlist,
             music=music,
         )
-        serializer = AddToMyPlayListSerializer(playlistmusic)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        context = {
+            'playlistmusic': playlistmusic,
+        }
+        return render(request, 'playlist/playlist.html', context)
 
-
-
-        # user = request.user
-        # playlist_id = request.data.get('playlist')
-        # ret = {
-        #     'user': user.pk,
-        #     'playlist_id': playlist_id
-        # }
-        # return Response(ret)
+    else:
+        return render(request, 'playlist/playlist.html')
