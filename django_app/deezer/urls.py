@@ -22,7 +22,6 @@ from deezer import settings
 from member.urls import apis as member_apis_urls
 from member.urls import views as member_view_urls
 from playlist.urls import apis as playlist_apis_urls
-from playlist.urls import views as playlist_urls
 
 from . import views
 
@@ -39,7 +38,6 @@ urlpatterns = [
     # local-server용 urls
     url(r'^$', views.index, name='index'),
     url(r'^member/', include(member_view_urls)),
-    url(r'^playlist/', include(playlist_urls)),
 
     # api용 urls
     url(r'^api/', include(api_urlpatterns, namespace='api')),
