@@ -7,7 +7,7 @@ class MusicListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Music
         fields = (
-            "id_num",
+            "song_id",
             "rank",
             "duration",
             "artist",
@@ -18,6 +18,8 @@ class MusicListSerializer(serializers.ModelSerializer):
             "artist_picture_medium",
             "artist_picture_big",
 
+            "album_id",
+            "album_title",
             "album_picture_small",
             "album_picture_medium",
             "album_picture_big",
@@ -28,7 +30,7 @@ class MusicCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Music
         fields = (
-            "id_num",
+            "song_id",
             "rank",
             "duration",
             "artist",
@@ -39,6 +41,8 @@ class MusicCreateSerializer(serializers.ModelSerializer):
             "artist_picture_medium",
             "artist_picture_big",
 
+            "album_id",
+            "album_title",
             "album_picture_small",
             "album_picture_medium",
             "album_picture_big",
