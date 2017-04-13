@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from search import views, singers
+from search import views, crawling
 
 app_name = 'search'
 urlpatterns = [
