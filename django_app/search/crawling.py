@@ -3,19 +3,22 @@ from bs4 import BeautifulSoup
 
 
 def get_title_top1000():
-    url = 'https://www.letssingit.com/artists/popular/1'
-    source_code = requests.get(url)
-    plain_text = source_code.text
-    soup = BeautifulSoup(plain_text, "html.parser")
-
-    items = soup.find_all('a', 'high_profile')
-
+    n = 1
     result = []
-    for item in items:
-        k = item.string
-        result.append(k)
-    # print(result)
-    return result
+    while n < 1001:
+        url = 'https://www.letssingit.com/artists/popular/{}'.format(n)
+        source_code = requests.get(url)
+        plain_text = source_code.text
+        soup = BeautifulSoup(plain_text, "html.parser")
+
+        items = soup.find_all('a', 'high_profile')
+
+        for item in items:
+            singer = item.string
+            result.append(singer)
+            n += 1
+        print(result)
+        # return result
 
 # get_title_top1000()
 
