@@ -1,10 +1,9 @@
 from django.db.models import Q
 from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework.generics import ListAPIView, CreateAPIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.generics import ListAPIView
 
 from search.models import Music
-from .serializers import MusicListSerializer, MusicCreateSerializer
+from .serializers import MusicListSerializer
 
 
 class MusicListAPIView(ListAPIView):
