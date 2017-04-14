@@ -12,7 +12,7 @@ class MusicListAPIView(ListAPIView):
     search_fields = ['title', 'artist', 'album_id', 'song_id']
 
     def get_queryset(self, *args, **kwargs):
-        queryset_list = Music.objects.all()
+        queryset_list = Music.objects.distinct('song_id')
         query = self.request.GET.get("q")
         if query:
             queryset_list = queryset_list.filter(

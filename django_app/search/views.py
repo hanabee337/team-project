@@ -12,7 +12,9 @@ from search.serializers import MusicSerializer
 @api_view(['GET', 'POST'])
 def search(request, format=None):
     musics = []
-    singers = {'louis',
+    singers = {'Ed Sheeran', 'Zara Larsson', 'Clean Bandit', 'Drake', 'Bruno Mars', 'The Chainsmokers',
+               'Trolls [2016]', 'Justin Bieber', 'Coldplay', 'Adele', 'Selena Gomez', 'Taylor Swift', 'Alessia Cara',
+               'Kygo', 'The Weeknd',
                }
 
     for singer in singers:
