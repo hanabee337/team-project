@@ -43,7 +43,7 @@ def select_my_playlist(request, format=None):
 @api_view(['GET', 'POST'])
 def add_to_my_playlist(request, format=None):
     playlist_id = request.data.get('playlist_id')
-    music_id_num = request.data.get('music_id_num')
+    music_id_num = request.data.get('music_album_id')
     playlist = PlayList.objects.get(pk=playlist_id)
     music = Music.objects.get(id_num=music_id_num)
 
