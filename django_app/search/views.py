@@ -12,7 +12,7 @@ from search.serializers import MusicSerializer
 @api_view(['GET', 'POST'])
 def search(request, format=None):
     musics = []
-    singers = {'louis',
+    singers = {'teddy',
                }
 
     for singer in singers:
