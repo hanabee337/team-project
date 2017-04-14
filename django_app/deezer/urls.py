@@ -21,12 +21,15 @@ from django.contrib import admin
 from deezer import settings
 from member.urls import apis as member_apis_urls
 from member.urls import views as member_view_urls
+from playlist.urls import apis as playlist_apis_urls
+
 from . import views
 
 api_urlpatterns = [
     url(r'^member/', include(member_apis_urls)),
     # api/search/
     url(r'^search/', include('search.api.urls', namespace='api-search')),
+    url(r'^playlist/', include(playlist_apis_urls)),
 ]
 
 urlpatterns = [

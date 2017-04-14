@@ -4,25 +4,25 @@ from django.db import models
 
 
 class MyUserManager(BaseUserManager):
-    def _create_user(self, nickname, email, password1, password2, **extra_fields):
+    def _create_user(self, nickname, email, password, **extra_fields):
         if not email:
             raise ValueError('The given email must be set')
 
         # username을 email로(email을 user id로 사용)
         user = self.model(nickname=nickname, email=email, **extra_fields)
-        user.set_password(password2)
+        user.set_password(password)
         user.save()
         return user
 
-    def create_user(self, nickname=None, email=None, password1=None, password2=None, **extra_fields):
+    def create_user(self, nickname=None, email=None, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', False)
         extra_fields.setdefault('is_superuser', False)
-        return self._create_user(nickname, email, password1, password2, **extra_fields)
+        return self._create_user(nickname, email, password, **extra_fields)
 
-    def create_superuser(self, nickname, email, password1, password2, **extra_fields):
+    def create_superuser(self, nickname, email, password, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
-        return self._create_user(nickname, email, password1, password2, **extra_fields)
+        return self._create_user(nickname, email, password, **extra_fields)
 
 
 class MyUser(AbstractBaseUser, PermissionsMixin):
@@ -39,8 +39,8 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
 
     is_staff = models.BooleanField(default=False)
 
-    password1 = models.CharField(max_length=255)
-    password2 = models.CharField(max_length=255)
+    # password1 = models.CharField(max_length=255)
+    # password2 = models.CharField(max_length=255)
 
     img_profile = models.ImageField(upload_to='user', blank=True)
 

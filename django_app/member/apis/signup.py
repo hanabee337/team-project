@@ -2,26 +2,47 @@ from rest_framework import generics
 from rest_framework import status
 from rest_framework.response import Response
 
-from member.serializers import SignupSerializer
+from member.serializers import UserSerializer, SignupSerializer
 
 
 class SignUp_cbv(generics.CreateAPIView):
     serializer_class = SignupSerializer
 
     def create(self, request, *args, **kwargs):
-        # 회원 가입하면서 gender, age, email 등을 동시에 입력하는 실습
-        # request.data : name, password, email, gender, age + user.pk
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        print('dir(serializer.data):{}'.format(dir(serializer.data)))
+        # print('\nSignUp_cbv create\n')
 
-        ret = serializer.data
-        print('serializer.data:{}'.format(serializer.data))
+        # First, validate request.data in SignupSerializer
+        signup_serializer = self.get_serializer(data=request.data)
+        signup_serializer.is_valid(raise_exception=True)
+        # print('\nsignup_serializer.validated_data:{}\n'.format(signup_serializer.validated_data))
 
+        # After everything is confirmed as valid,
+        # then, send it to UserSerializer
+        model_serializer = UserSerializer(data=signup_serializer.data)
+        # print('\nmodel_serializer.initial_data:{}\n'.format(model_serializer.initial_data))
+
+        # model_serializer 에서는 password2는 skip 하고,
+        # password1은 password 로 변경(UserSerializer 에서 field 로 정의한)한 후,
+        # validation 하여 model_serializer.data 값을 얻는다.
+        model_serializer.initial_data = {
+            'password': signup_serializer.data.get('password1'),
+            'email': signup_serializer.data.get('email'),
+            'nickname': signup_serializer.data.get('nickname'),
+            'gender': signup_serializer.data.get('gender'),
+            'age': signup_serializer.data.get('age'),
+        }
+        # print('\nmodel_serializer.initial_data:{}\n'.format(model_serializer.initial_data))
+
+        model_serializer.is_valid(raise_exception=True)
+        # print('\nmodel_serializer.data:{}\n'.format(model_serializer.data))
+
+        # UserSerializer 에서 '.save()' 실행하고, 'create_user'를 진행한다.
+        self.perform_create(model_serializer)
+
+        headers = self.get_success_headers(model_serializer.data)
+
+        ret = model_serializer.data
         user_info = {
-            # 'username': ret.get('username', ''),
             'email': ret.get('email', ''),
             'age': ret.get('age', ''),
             'nickname': ret.get('nickname', ''),
@@ -32,4 +53,5 @@ class SignUp_cbv(generics.CreateAPIView):
         return Response({'user_info': user_info}, status=status.HTTP_201_CREATED, headers=headers)
 
     def perform_create(self, serializer):
+        # print('\nperform_create\n')
         serializer.save()
