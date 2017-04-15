@@ -4,7 +4,7 @@
 <div>
     <form action="" method="POST">{% csrf_token %}
         <p>playlist_id</p><input type="text" name="playlist_id" value="{{ playlist_id }}">
-        <p>music_id_num</p><input type="text" name="music_id_num" value="{{ music_id_num }}">
+        <p>music_song_id</p><input type="text" name="music_song_id" value="{{ music_song_id }}">
         <button type="submit">연결</button>
     </form>
     <p>{{ playlistmusic.playlist.title }}</p>
