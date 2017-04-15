@@ -8,9 +8,9 @@ from search.models import Music
 def views_add_to_my_playlist(request, format=None):
     if request.method == 'POST':
         playlist_id = request.POST.get('playlist_id')
-        music_id_num = request.POST.get('music_id_num')
+        music_song_id = request.POST.get('music_song_id')
         playlist = PlayList.objects.get(pk=playlist_id)
-        music = Music.objects.get(id_num=music_id_num)
+        music = Music.objects.get(song_id=music_song_id)
         playlistmusic = PlayListMusic.objects.create(
             playlist=playlist,
             music=music,
