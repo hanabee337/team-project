@@ -8,7 +8,7 @@ from .models import MyUser
 class MyUserAdmin(UserAdmin):
     fieldsets = (
         (None, {'fields': ('email', 'password', 'img_profile')}),
-        (_('Personal info'), {'fields': ('nickname', 'gender', 'age', )}),
+        (_('Personal info'), {'fields': ('nickname', 'gender', 'age',)}),
     )
     add_fieldsets = (
         (None, {
@@ -17,7 +17,8 @@ class MyUserAdmin(UserAdmin):
         }),
     )
     ordering = ('email',)
-    list_display = ('nickname', 'email',)
+    list_display = ('email', 'nickname',)
     list_filter = ('is_staff',)
+
 
 admin.site.register(MyUser, MyUserAdmin)
