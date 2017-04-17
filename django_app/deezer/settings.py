@@ -111,7 +111,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     ),
-    'PAGE_SIZE': 20000
+    'PAGE_SIZE': 1000
 }
 
 # Application definition
