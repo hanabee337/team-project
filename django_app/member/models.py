@@ -30,13 +30,17 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
         ('M', 'Male'),
         ('F', 'Female'),
     )
+    CHOICES_USER_TYPE = (
+        ('D', 'Django'),
+        ('F', 'Facebook'),
+    )
 
     # username = models.CharField(max_length=255, unique=True)
     nickname = models.CharField(max_length=255, unique=True)
     email = models.EmailField(unique=True)
-    gender = models.CharField(max_length=1, choices=CHOICES_GENDER)
+    gender = models.CharField(max_length=1, choices=CHOICES_GENDER, default='M')
     age = models.IntegerField(blank=True, null=True)
-
+    user_type = models.CharField(max_length=1, choices=CHOICES_USER_TYPE, default='D')
     is_staff = models.BooleanField(default=False)
 
     # password1 = models.CharField(max_length=255)

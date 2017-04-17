@@ -12,7 +12,8 @@ class UserSerializer(serializers.ModelSerializer):
         fields = (
             'nickname', 'email',
             'age', 'gender',
-            'password'
+            'password',
+            'user_type',
         )
 
     def save(self, **kwargs):

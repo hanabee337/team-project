@@ -46,7 +46,8 @@ class SignUp_cbv(generics.CreateAPIView):
             'email': ret.get('email', ''),
             'age': ret.get('age', ''),
             'nickname': ret.get('nickname', ''),
-            'gender': ret.get('gender', '')
+            'gender': ret.get('gender', ''),
+            'user_type': ret.get('user_type'),
         }
 
         # return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
