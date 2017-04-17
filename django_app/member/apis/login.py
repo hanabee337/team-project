@@ -14,7 +14,7 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from member.serializers import UserInfoSerializer, LoginSerializer
+from member.serializers import LoginSerializer
 
 
 class LoginView(RestLoginView):
@@ -41,7 +41,7 @@ class LoginView(RestLoginView):
     def login(self):
         self.user = self.serializer.validated_data['user']
 
-        print('login user:{}'.format(self.user))
+        # print('login user:{}'.format(self.user))
 
         if getattr(settings, 'REST_USE_JWT', False):
             self.token = jwt_encode(self.user)
@@ -69,22 +69,25 @@ class LoginView(RestLoginView):
         # Get User Model
         UserModel = get_user_model()
         user = UserModel.objects.get(email__iexact=self.user.email)
-        print('user: {}'.format(self.user))
+        # print('user: {}'.format(self.user))
 
         #  Serializing User Info & key
-        user_info_serializer = UserInfoSerializer(user)
-        print(user_info_serializer.data)
-        nickname = user_info_serializer.data.get('nickname', '')
-        email = user_info_serializer.data.get('email', '')
-        age = user_info_serializer.data.get('age', '')
-        gender = user_info_serializer.data.get('gender', '')
+        # user_info_serializer = UserInfoSerializer(user)
+        # print(user_info_serializer.data)
+        # nickname = user_info_serializer.data.get('nickname', '')
+        # email = user_info_serializer.data.get('email', '')
+        # age = user_info_serializer.data.get('age', '')
+        # gender = user_info_serializer.data.get('gender', '')
+        # user_type = serializer.data.get('user_type', '')
+
         key = serializer.data.get('key', '')
         user_info = {
-            'nickname': nickname,
-            'email': email,
-            'age': age,
-            'gender': gender,
-            'key': key
+            'nickname': user.nickname,
+            'email': user.email,
+            'age': user.age,
+            'gender': user.gender,
+            'key': key,
+            'user_type': user.user_type,
         }
         return Response({"user_info": user_info}, status=status.HTTP_200_OK)
 
