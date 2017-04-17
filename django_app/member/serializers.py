@@ -61,20 +61,23 @@ class SignupSerializer(serializers.Serializer):
     def validate_email(self, email):
         if UserModel.objects.filter(email__iexact=email).exists():
             raise serializers.ValidationError(
-                _("A user is already registered with this e-mail address. so try another one"))
+                # _("A user is already registered with this e-mail address. so try another one"))
+                _("이미 가입된 이메일입니다. 다른 이메일로 가입해 주세요"))
         return email
 
     def validate_nickname(self, nickname):
         if UserModel.objects.filter(nickname__iexact=nickname).exists():
             raise serializers.ValidationError(
-                _("A user is already registered with this nickname. so try another one"))
+                # _("A user is already registered with this nickname. so try another one"))
+                _("이미 등록된 닉네임입니다. 다른 닉네임으로 등록해 주세요."))
         return nickname
 
     def validate(self, attrs):
         password1 = attrs.get('password1')
         password2 = attrs.get('password2')
         if password1 != password2:
-            msg = _('Two passwords do not match. Are you sure?...')
+            # msg = _('Two passwords do not match. Are you sure?...')
+            msg = _('두 개의 패스워드가 일치하지 않습니다. 확인해 주세요')
             raise exceptions.ValidationError(msg)
         return attrs
 
@@ -95,13 +98,15 @@ class LoginSerializer(serializers.Serializer):
         if email and password:
             user = authenticate(email=email, password=password)
         else:
-            msg = _('Must include "email" and "password".')
+            # msg = _('Must include "email" and "password".')
+            msg = _('반드시 이메일과 패스워드를 입력해 주세요.')
             raise exceptions.ValidationError(msg)
 
         if user is None:
             # we assume that email is already validated in 'validate_email',
             # so, we assume that only password does not match
-            msg = _('Your password does not match. Are your sure?')
+            # msg = _('Your password does not match. Are your sure?')
+            msg = _('입력하신 패스워드가 맞지 않습니다.')
             raise exceptions.ValidationError(msg)
 
         return user
@@ -125,7 +130,8 @@ class LoginSerializer(serializers.Serializer):
         try:
             UserModel.objects.get(email__iexact=email).get_username()
         except UserModel.DoesNotExist:
-            msg = _('A user using this email does not exist, check the email again.')
+            # msg = _('A user using this email does not exist, check the email again.')
+            msg = _('입력하신 이메일은 등록되어 있지 않습니다. 이메일을 확인해 주세요.')
             raise exceptions.ValidationError(msg)
         return email
 
@@ -238,13 +244,15 @@ class Facebook_SignUp_Serializer(serializers.Serializer):
     def validate_email(self, email):
         if UserModel.objects.filter(email__iexact=email).exists():
             raise serializers.ValidationError(
-                _("A user is already registered with this e-mail address. so try another one"))
+                # _("A user is already registered with this e-mail address. so try another one"))
+                _("이미 가입된 이메일입니다. 다른 이메일로 가입해 주세요"))
         return email
 
     def validate_nickname(self, nickname):
         if UserModel.objects.filter(nickname__iexact=nickname).exists():
             raise serializers.ValidationError(
-                _("A user is already registered with this nickname. so try another one"))
+                # _("A user is already registered with this nickname. so try another one"))
+                _("이미 등록된 닉네임입니다. 다른 닉네임으로 등록해 주세요."))
         return nickname
 
     def validate(self, attrs):
