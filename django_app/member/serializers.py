@@ -39,7 +39,7 @@ class UserSerializer(serializers.ModelSerializer):
         return self.instance
 
     def create(self, validated_data):
-        # print('\ncreate validated_data:{}\n'.format(validated_data))
+        print('\ncreate validated_data:{}\n'.format(validated_data))
         user = UserModel.objects.create_user(**validated_data)
         return user
 
@@ -195,4 +195,86 @@ class UserInfoSerializer(serializers.Serializer):
 
     class Meta:
         model = UserModel
-        fields = ('nickname', 'email', 'gender', 'age',)
+        fields = ('nickname', 'email', 'gender', 'age', 'user_type')
+
+
+class Facebook_SignUp_Serializer(serializers.Serializer):
+    # access_token = serializers.CharField(max_length=255, required=True, allow_blank=False, allow_null=False)
+
+    # email field works as Facebook user id
+    email = serializers.CharField(max_length=255, required=True, allow_blank=False, allow_null=False)
+    nickname = serializers.CharField(max_length=255, required=True, allow_null=False, allow_blank=False)
+
+    def create(self, validated_data):
+        print('\ncreate validated_data:{}\n'.format(validated_data))
+        user = UserModel.objects.create_user(**validated_data)
+        user.user_type = 'F'
+        user.save()
+        # print('user.user_type: {}'.format(user.user_type))
+        return user
+
+    def save(self, **kwargs):
+        # print('save self.validated_data:{}'.format(self.validated_data))
+
+        validated_data = dict(
+            list(self.validated_data.items()) +
+            list(kwargs.items())
+        )
+        # print('validated_data:{}'.format(validated_data))
+
+        if self.instance is not None:
+            self.instance = self.update(self.instance, validated_data)
+            assert self.instance is not None, (
+                '`update()` did not return an object instance.'
+            )
+        else:
+            self.instance = self.create(validated_data)
+            assert self.instance is not None, (
+                '`create()` did not return an object instance.'
+            )
+
+        return self.instance
+
+    def validate_email(self, email):
+        if UserModel.objects.filter(email__iexact=email).exists():
+            raise serializers.ValidationError(
+                _("A user is already registered with this e-mail address. so try another one"))
+        return email
+
+    def validate_nickname(self, nickname):
+        if UserModel.objects.filter(nickname__iexact=nickname).exists():
+            raise serializers.ValidationError(
+                _("A user is already registered with this nickname. so try another one"))
+        return nickname
+
+    def validate(self, attrs):
+        # print('validate file: {}'.format(__file__))
+        # print('attrs:{}'.format(attrs))
+        #
+        # # email field is considered as facebook user id
+        # user_id = attrs.get('email')
+        #
+        # # 해당 USER_ID로 graph API에 유저정보를 요청
+        # url_api_user = 'https://graph.facebook.com/{user_id}'.format(
+        #     user_id=user_id
+        # )
+        # fields = [
+        #     'id',
+        #     'first_name',
+        #     'last_name',
+        #     'gender',
+        #     'picture',
+        #     'email',
+        # ]
+        #
+        # params = {
+        #     'fields': ','.join(fields),
+        #     'access_token': USER_ACCESS_TOKEN,
+        # }
+        # r = requests.get(url_api_user, params)
+        # dict_user_info = r.json()
+        # pprint(dict_user_info)
+        #
+        # print('f/b email:{}'.format(dict_user_info['email']))
+
+        return attrs
