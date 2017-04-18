@@ -5,11 +5,19 @@
     <form action="" method="POST">{% csrf_token %}
         <p>playlist_id</p><input type="text" name="playlist_id" value="{{ playlist_id }}">
         <p>music_song_id</p><input type="text" name="music_song_id" value="{{ music_song_id }}">
+        <p>music_song_id</p><input type="text" name="music_song_id" value="{{ music_song_id }}">
+        <p>music_song_id</p><input type="text" name="music_song_id" value="{{ music_song_id }}">
+        <p>music_song_id</p><input type="text" name="music_song_id" value="{{ music_song_id }}">
+        <p>music_song_id</p><input type="text" name="music_song_id" value="{{ music_song_id }}">
         <button type="submit">연결</button>
     </form>
-    <p>{{ playlistmusic.playlist.title }}</p>
-    <p>{{ playlistmusic.music }}</p>
-    <p>{{ playlistmusic.created_date }}</p>
 
+    {% if playlistmusics %}
+        {% for playlistmusic in playlistmusics %}
+            <p>{{ playlistmusic.playlist.title }}</p>
+            <p>{{ playlistmusic.music.song_id }}</p>
+        {% endfor %}
+        <p>{{ playlistmusic.created_date }}</p>
+    {% endif %}
 </div>
 {% endblock %}

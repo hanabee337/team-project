@@ -42,15 +42,23 @@ def select_my_playlist(request, format=None):
 
 @api_view(['GET', 'POST'])
 def add_to_my_playlist(request, format=None):
+    musics = []
+    playlistmusics = []
     playlist_id = request.data.get('playlist_id')
-    music_song_id = request.data.get('music_song_id')
+    music_song_ids = request.data.getlist('music_song_id')
+
     playlist = PlayList.objects.get(pk=playlist_id)
-    music = Music.objects.get(song_id=music_song_id)
+
+    for music_song_id in music_song_ids:
+        music = Music.objects.get(song_id=music_song_id)
+        musics.append(music)
 
     if request.method == 'POST':
-        playlistmusic = PlayListMusic.objects.create(
-            playlist=playlist,
-            music=music,
-        )
-        serializer = AddToMyPlayListSerializer(playlistmusic)
+        for music in musics:
+            playlistmusic = PlayListMusic.objects.create(
+                playlist=playlist,
+                music=music,
+            )
+            playlistmusics.append(playlistmusic)
+        serializer = AddToMyPlayListSerializer(playlistmusics, many=True)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
