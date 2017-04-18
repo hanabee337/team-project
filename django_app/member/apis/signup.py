@@ -64,13 +64,22 @@ class SignUp_cbv(generics.CreateAPIView):
 class Facebook_SignUp_View(generics.CreateAPIView):
     serializer_class = Facebook_SignUp_Serializer
 
+    def post(self, request, *args, **kwargs):
+        # print('post request.data:{}'.format(request.data))
+        if User_model.objects.filter(email__iexact=request.data.get('email')).exists():
+            # 이미 있으면 여기서 로그인 루틴 처리(로그인, Token 반환, authenticate)
+            return Response({'이미 등록된 가입자 입니다.'}, status=status.HTTP_400_BAD_REQUEST)
+        return self.create(request, *args, **kwargs)
+
     def create(self, request, *args, **kwargs):
         # print('request.data:{}'.format(request.data))
 
         # First, validate request.data in SignupSerializer
         signup_serializer = self.get_serializer(data=request.data)
+        signup_serializer.initial_data['password'] = request.data.get('email')
         signup_serializer.is_valid(raise_exception=True)
         # print('\nsignup_serializer.validated_data:{}\n'.format(signup_serializer.validated_data))
+
         self.perform_create(signup_serializer)
 
         user = User_model.objects.get(email__iexact=request.data.get('email'))
@@ -78,6 +87,8 @@ class Facebook_SignUp_View(generics.CreateAPIView):
             'email': user.email,
             'nickname': user.nickname,
             'user_type': user.user_type,
+            'age': user.age,
+            'gender': user.gender,
         }
         # print('user_info:{}'.format(user_info))
 
@@ -86,5 +97,4 @@ class Facebook_SignUp_View(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         # print('\nperform_create\n')
-        # facebook userid 검증(?)
         serializer.save()

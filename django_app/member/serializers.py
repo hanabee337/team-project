@@ -210,6 +210,7 @@ class Facebook_SignUp_Serializer(serializers.Serializer):
     # email field works as Facebook user id
     email = serializers.CharField(max_length=255, required=True, allow_blank=False, allow_null=False)
     nickname = serializers.CharField(max_length=255, required=True, allow_null=False, allow_blank=False)
+    password = serializers.CharField(max_length=255, required=False, allow_null=True, allow_blank=True)
 
     def create(self, validated_data):
         # print('\ncreate validated_data:{}\n'.format(validated_data))
