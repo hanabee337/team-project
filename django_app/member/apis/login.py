@@ -15,7 +15,9 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from member.serializers import LoginSerializer
+from member.serializers import LoginSerializer, Facebook_LoginSerializer
+
+User_model = get_user_model()
 
 
 class LoginView(RestLoginView):
@@ -68,8 +70,7 @@ class LoginView(RestLoginView):
                                           context={'request': self.request})
 
         # Get User Model
-        UserModel = get_user_model()
-        user = UserModel.objects.get(email__iexact=self.user.email)
+        user = User_model.objects.get(email__iexact=self.user.email)
         # print('user: {}'.format(self.user))
 
         #  Serializing User Info & key
@@ -117,3 +118,78 @@ class LogoutView(RestLogoutView):
 
         return Response({"detail": _("Successfully Logged-Out")},
                         status=status.HTTP_200_OK)
+
+
+class Facebook_Login_View(RestLoginView):
+    """
+    Check the credentials and return the REST Token
+    if the credentials are valid and authenticated.
+    Calls Django Auth login method to register User ID
+    in Django session framework
+
+    Accept the following POST parameters: username, password
+    Return the REST Framework Token Object's key.
+    """
+    permission_classes = (AllowAny,)
+    serializer_class = Facebook_LoginSerializer
+    token_model = TokenModel
+
+    def get_response_serializer(self):
+        if getattr(settings, 'REST_USE_JWT', False):
+            response_serializer = JWTSerializer
+        else:
+            response_serializer = TokenSerializer
+        return response_serializer
+
+    def login(self):
+        self.user = self.serializer.validated_data['user']
+
+        # print('login user:{}'.format(self.user))
+
+        if getattr(settings, 'REST_USE_JWT', False):
+            self.token = jwt_encode(self.user)
+        else:
+            self.token = create_token(self.token_model, self.user,
+                                      self.serializer)
+
+        if getattr(settings, 'REST_SESSION_LOGIN', True):
+            self.process_login()
+
+    def get_response(self):
+        serializer_class = self.get_response_serializer()
+
+        if getattr(settings, 'REST_USE_JWT', False):
+            data = {
+                'user': self.user,
+                'token': self.token
+            }
+            serializer = serializer_class(instance=data,
+                                          context={'request': self.request})
+        else:
+            serializer = serializer_class(instance=self.token,
+                                          context={'request': self.request})
+
+        # Get User Model
+        user = User_model.objects.get(email__iexact=self.user.email)
+        # print('user: {}'.format(self.user))
+
+        key = serializer.data.get('key', '')
+        user_info = {
+            'nickname': user.nickname,
+            'email': user.email,
+            'age': user.age,
+            'gender': user.gender,
+            'key': key,
+            'user_type': user.user_type,
+        }
+        return Response({"user_info": user_info}, status=status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+        self.request = request
+        self.serializer = self.get_serializer(data=self.request.data)
+        # email란에 user id, password란에 user id 자동 입력
+        self.serializer.initial_data['password'] = self.request.data.get('email')
+        self.serializer.is_valid(raise_exception=True)
+
+        self.login()
+        return self.get_response()

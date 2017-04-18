@@ -287,3 +287,114 @@ class Facebook_SignUp_Serializer(serializers.Serializer):
         # print('f/b email:{}'.format(dict_user_info['email']))
 
         return attrs
+
+
+class Facebook_LoginSerializer(serializers.Serializer):
+    email = serializers.CharField(max_length=255, required=True, allow_blank=False, allow_null=False)
+    password = serializers.CharField(max_length=255, allow_blank=True, allow_null=True)
+
+    class Meta:
+        model = UserModel
+        fields = (
+            'email', 'password',
+        )
+
+    def _validate_password(self, email, password):
+        user = None
+
+        if email and password:
+            user = authenticate(email=email, password=password)
+        else:
+            # msg = _('Must include "email" and "password".')
+            msg = _('반드시 이메일과 패스워드를 입력해 주세요.')
+            raise exceptions.ValidationError(msg)
+
+        if user is None:
+            # we assume that email is already validated in 'validate_email',
+            # so, we assume that only password does not match
+            # msg = _('Your password does not match. Are your sure?')
+            msg = _('입력하신 패스워드가 맞지 않습니다.')
+            raise exceptions.ValidationError(msg)
+
+        return user
+
+    def _validate_username_email(self, username, email, password):
+        user = None
+
+        if email and password:
+            user = authenticate(email=email, password=password)
+        elif username and password:
+            user = authenticate(username=username, password=password)
+        else:
+            msg = _('Must include either "username" or "email" and "password".')
+            raise exceptions.ValidationError(msg)
+
+        return user
+
+    def validate_email(self, email):
+        # print('validate_email:{}'.format(email))
+
+        try:
+            UserModel.objects.get(email__iexact=email).get_username()
+        except UserModel.DoesNotExist:
+            # msg = _('A user using this email does not exist, check the email again.')
+            msg = _('입력하신 이메일은 등록되어 있지 않습니다. 이메일을 확인해 주세요.')
+            raise exceptions.ValidationError(msg)
+        return email
+
+    def validate(self, attrs):
+        # print('\nvalidate:{}'.format(attrs))
+
+        username = attrs.get('username')
+        email = attrs.get('email')
+        password = attrs.get('password')
+
+        user = None
+
+        if 'allauth' in settings.INSTALLED_APPS:
+            from allauth.account import app_settings
+
+            # Authentication through email
+            if app_settings.AUTHENTICATION_METHOD == app_settings.AuthenticationMethod.EMAIL:
+                user = self._validate_email(email, password)
+
+            # Authentication through username
+            if app_settings.AUTHENTICATION_METHOD == app_settings.AuthenticationMethod.USERNAME:
+                user = self._validate_username(username, password)
+
+            # Authentication through either username or email
+            else:
+                user = self._validate_username_email(username, email, password)
+
+        else:
+            # Authentication without using allauth
+            if email:
+                try:
+                    username = UserModel.objects.get(email__iexact=email).get_username()
+                except UserModel.DoesNotExist:
+                    pass
+
+                user = self._validate_password(email, password)
+
+            if username:
+                user = self._validate_username_email(username, '', password)
+
+        # Did we get back an active user?
+        if user:
+            if not user.is_active:
+                msg = _('User account is disabled.')
+                raise exceptions.ValidationError(msg)
+        else:
+            msg = _('Unable to log in with provided credentials.')
+            raise exceptions.ValidationError(msg)
+
+        # If required, is the email verified?
+        if 'rest_auth.registration' in settings.INSTALLED_APPS:
+            from allauth.account import app_settings
+            if app_settings.EMAIL_VERIFICATION == app_settings.EmailVerificationMethod.MANDATORY:
+                email_address = user.emailaddress_set.get(email=user.email)
+                if not email_address.verified:
+                    raise serializers.ValidationError(_('E-mail is not verified.'))
+
+        attrs['user'] = user
+        return attrs
