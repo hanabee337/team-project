@@ -213,7 +213,7 @@ class Facebook_SignUp_Serializer(serializers.Serializer):
     password = serializers.CharField(max_length=255, required=False, allow_null=True, allow_blank=True)
 
     def create(self, validated_data):
-        # print('\ncreate validated_data:{}\n'.format(validated_data))
+        print('\ncreate validated_data:{}\n'.format(validated_data))
         user = UserModel.objects.create_user(**validated_data)
         user.user_type = 'F'
         user.save()

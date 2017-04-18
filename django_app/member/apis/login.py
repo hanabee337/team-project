@@ -11,7 +11,6 @@ from rest_auth.views import LoginView as RestLoginView
 from rest_auth.views import LogoutView as RestLogoutView
 from rest_framework import permissions
 from rest_framework import status
-from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
@@ -104,10 +103,9 @@ class LoginView(RestLoginView):
 
 class LogoutView(RestLogoutView):
     permission_classes = (permissions.IsAuthenticated,)
-    authentication_classes = (TokenAuthentication,)
 
     def logout(self, request):
-        # print('\n RestLogoutView \n')
+        print('\n RestLogoutView \n')
         try:
             request.user.auth_token.delete()
         except (AttributeError, ObjectDoesNotExist):
