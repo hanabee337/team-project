@@ -3,8 +3,9 @@ from rest_framework import status
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework.response import Response
-from rest_framework.settings import api_settings
 
+from playlist.models import PlayList
+from playlist.serializers import PlayListSerializer
 from search.models import Music
 from .serializers import MusicListSerializer, MusicCreateSerializer
 
@@ -37,3 +38,17 @@ class MusicCreateAPIView(CreateAPIView):
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
+
+class PlayListAPIView(ListAPIView):
+    serializer_class = PlayListSerializer
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['title']
+
+    def get_queryset(self, *args, **kwargs):
+        queryset_list = PlayList.objects.all()
+        query = self.request.GET.get("q")
+        if query:
+            queryset_list = queryset_list.filter(
+                Q(title__icontains=query)
+            ).distinct()
+        return queryset_list
