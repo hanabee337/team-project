@@ -1,7 +1,7 @@
 from django.conf.urls import url, include
 
 from member.apis.authtoken import DeleteAuthToken, ObtainAuthToken
-from member.apis.login import LogoutView, LoginView
+from member.apis.login import LogoutView, LoginView, Facebook_Login_View
 from member.apis.signup import SignUp_cbv, Facebook_SignUp_View
 
 urlpatterns = [
@@ -16,6 +16,8 @@ urlpatterns = [
 
     # facebook signup
     url(r'^facebook/signup/$', Facebook_SignUp_View.as_view(), name='facebook_signup'),
+    # facebook login
+    url(r'^facebook/login/$', Facebook_Login_View.as_view(), name='facebook_login'),
 
     url(r'', include('rest_auth.urls')),
 ]
