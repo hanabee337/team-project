@@ -1,0 +1,25 @@
+{% extends 'common/base.html' %}
+
+{% block content %}
+<div>
+    <form action="" method="POST">{% csrf_token %}
+        <p>playlist_id</p><input type="text" name="playlist_id" value="{{ playlist_id }}">
+        <p>playlist_id</p><input type="text" name="playlist_id" value="{{ playlist_id }}">
+        <p>playlist_id</p><input type="text" name="playlist_id" value="{{ playlist_id }}">
+        <button type="submit">복사</button>
+    </form>
+
+    {% if copied_playlists %}
+        <br>
+        {% for copied_playlist in copied_playlists %}
+        <div>
+            <p>user: {{ copied_playlist.author.nickname }}</p>
+            <p>playlist_pk: {{ copied_playlist.pk }}</p>
+            <p>playlist_image: {{ copied_playlist.image }}</p>
+            <p>playlist_music: {{ copied_playlist.playlist_music.all }}</p>
+            <br>
+        </div>
+        {% endfor %}
+    {% endif %}
+</div>
+{% endblock %}
