@@ -19,6 +19,12 @@ class PlayList(models.Model):
         through='PlayListMusic',
         related_name='music_playlist_set'
     )
+    like_user = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        blank=True,
+        through='PlayListLikeUser',
+        related_name='user_like_playlist'
+    )
 
     class Meta:
         ordering = ('-pk',)
@@ -32,3 +38,11 @@ class PlayListMusic(models.Model):
     class Meta:
         unique_together = ('playlist', 'music')
 
+
+class PlayListLikeUser(models.Model):
+    playlist = models.ForeignKey(PlayList)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('playlist', 'user')
