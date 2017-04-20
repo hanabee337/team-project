@@ -10,8 +10,12 @@ urlpatterns = [
     url(r'^select_my_playlist', apis.select_my_playlist),
     url(r'^add_to_my_playlist', apis.add_to_my_playlist),
     url(r'^copy_others_playlist', apis.copy_others_playlist),
+    url(r'^playlistlikeuser_toggle', apis.playlistlikeuser_toggle),
+
     url(r'^views_add_to_my_playlist', views.views_add_to_my_playlist),
     url(r'^views_copy_others_playlist', views.views_copy_others_playlist),
+    url(r'^views_playlistlikeuser_toggle', views.views_playlistlikeuser_toggle),
+
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

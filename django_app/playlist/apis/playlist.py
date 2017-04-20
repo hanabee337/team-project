@@ -1,3 +1,5 @@
+import json
+
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status
@@ -6,6 +8,8 @@ from rest_framework.response import Response
 
 from playlist.models import PlayList
 from playlist.models import PlayListMusic
+from playlist.models.playlist import PlayListLikeUser
+from playlist.serializers import PlayListLikeUserSerializer
 from playlist.serializers import PlayListSerializer, AddToMyPlayListSerializer
 from search.models import Music
 
@@ -15,6 +19,7 @@ __all__ = (
     'select_my_playlist',
     'add_to_my_playlist',
     'copy_others_playlist',
+    'playlistlikeuser_toggle',
 )
 
 
@@ -47,22 +52,22 @@ def add_to_my_playlist(request, format=None):
         musics = []
         playlistmusics = []
         playlist_id = request.data.get('playlist_id')
-        music_song_ids = request.data.getlist('music_song_id')
-
-        playlist = PlayList.objects.get(pk=playlist_id)
-
+        python_playlist_id = json.loads(playlist_id)
+        playlist = PlayList.objects.get(pk=python_playlist_id)
+        music_song_ids = request.data.get('music_song_id')
         for music_song_id in music_song_ids:
-            music = Music.objects.get(song_id=music_song_id)
-            musics.append(music)
+            python_music_song_id = json.loads(music_song_id)
 
-            for m in musics:
-                playlistmusic = PlayListMusic.objects.create(
-                    playlist=playlist,
-                    music=m,
-                )
-                playlistmusics.append(playlistmusic)
-            serializer = AddToMyPlayListSerializer(playlistmusics, many=True)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            music = Music.objects.get(song_id=python_music_song_id)
+            musics.append(music)
+        for m in musics:
+            playlistmusic = PlayListMusic.objects.create(
+                playlist=playlist,
+                music=m,
+            )
+            playlistmusics.append(playlistmusic)
+        serializer = AddToMyPlayListSerializer(playlistmusics, many=True)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 @api_view(['GET', 'POST'])
@@ -70,10 +75,15 @@ def copy_others_playlist(request, format=None):
     if request.method == 'POST':
         playlists = []
         copied_playlists = []
+
         author = request.user
-        playlist_ids = request.data.getlist('playlist_id')
+
+        playlist_ids = request.data.get('playlist_id')
+
         for playlist_id in playlist_ids:
-            playlist = PlayList.objects.get(pk=playlist_id)
+            python_playlist_id = json.loads(playlist_id)
+
+            playlist = PlayList.objects.get(pk=python_playlist_id)
             playlists.append(playlist)
 
         for p in playlists:
@@ -94,3 +104,26 @@ def copy_others_playlist(request, format=None):
             copied_playlists.append(copied_playlist)
         serializer = PlayListSerializer(copied_playlists, many=True)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+@api_view(['GET', 'POST'])
+def playlistlikeuser_toggle(request, format=None):
+    if request.method == 'POST':
+        playlist_id = request.data.get('playlist_id')
+        python_playlist_id = json.loads(playlist_id)
+        playlist = PlayList.objects.get(pk=python_playlist_id)
+        user = request.user
+        exist_playlistlikeuser = playlist.playlistlikeuser_set.filter(
+            user=user,
+        )
+        if exist_playlistlikeuser:
+            exist_playlistlikeuser.delete()
+            return Response(status=status.HTTP_200_OK)
+
+        else:
+            playlistlikeuser = PlayListLikeUser.objects.create(
+                playlist=playlist,
+                user=user,
+            )
+            serializer = PlayListLikeUserSerializer(playlistlikeuser)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
