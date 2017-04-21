@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
 from playlist.models import PlayList
@@ -70,12 +71,11 @@ def views_copy_others_playlist(request, format=None):
     else:
         return render(request, 'playlist/copy_playlist.html')
 
-
 def views_playlistlikeuser_toggle(request, format=None):
     if request.method == 'POST':
         playlist_id = request.POST.get('playlist_id')
         playlist = PlayList.objects.get(pk=playlist_id)
-        user = request.user
+        user = request.user()
         exist_playlistlikeuser = playlist.playlistlikeuser_set.filter(
             user=user,
         )

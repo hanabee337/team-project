@@ -6,6 +6,7 @@ from search.models import Music
 __all__ = (
     'PlayList',
     'PlayListMusic',
+    'PlayListLikeUser',
 )
 
 
@@ -13,6 +14,7 @@ class PlayList(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL)
     title = models.CharField(max_length=100)
     image = models.ImageField(blank=True)
+    like_user_count = models.IntegerField(blank=True, default=0)
     playlist_music = models.ManyToManyField(
         Music,
         blank=True,

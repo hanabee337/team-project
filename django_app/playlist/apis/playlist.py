@@ -7,8 +7,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from playlist.models import PlayList
+from playlist.models import PlayListLikeUser
 from playlist.models import PlayListMusic
-from playlist.models.playlist import PlayListLikeUser
 from playlist.serializers import PlayListLikeUserSerializer
 from playlist.serializers import PlayListSerializer, AddToMyPlayListSerializer
 from search.models import Music
@@ -116,8 +116,11 @@ def playlistlikeuser_toggle(request, format=None):
         exist_playlistlikeuser = playlist.playlistlikeuser_set.filter(
             user=user,
         )
+
         if exist_playlistlikeuser:
             exist_playlistlikeuser.delete()
+            playlist.like_user_count -= 1
+            playlist.save()
             return Response(status=status.HTTP_200_OK)
 
         else:
@@ -125,5 +128,8 @@ def playlistlikeuser_toggle(request, format=None):
                 playlist=playlist,
                 user=user,
             )
+            playlist.like_user_count += 1
+            playlist.save()
             serializer = PlayListLikeUserSerializer(playlistlikeuser)
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)

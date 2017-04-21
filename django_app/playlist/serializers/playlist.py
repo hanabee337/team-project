@@ -20,6 +20,7 @@ class PlayListSerializer(serializers.ModelSerializer):
             'author',
             'title',
             'image',
+            'like_user_count',
             'playlist_music',
             'like_user',
         )
