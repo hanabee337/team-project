@@ -213,7 +213,7 @@ class Facebook_SignUp_Serializer(serializers.Serializer):
     password = serializers.CharField(max_length=255, required=False, allow_null=True, allow_blank=True)
 
     def create(self, validated_data):
-        print('\ncreate validated_data:{}\n'.format(validated_data))
+        # print('\ncreate validated_data:{}\n'.format(validated_data))
         user = UserModel.objects.create_user(**validated_data)
         user.user_type = 'F'
         user.save()
@@ -398,3 +398,52 @@ class Facebook_LoginSerializer(serializers.Serializer):
 
         attrs['user'] = user
         return attrs
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(min_length=8, required=True)
+    password1 = serializers.CharField(
+        style={'input_type': 'password'},
+        min_length=8,
+        required=True
+    )
+    password2 = serializers.CharField(
+        style={'input_type': 'password'},
+        min_length=8,
+        required=True
+    )
+
+    def validate_old_password(self, old_password):
+        # print('old_password:{}'.format(old_password))
+
+        self.request = self.context.get('request')
+        self.user = self.request.user
+
+        # print('self.user:{}'.format(self.user))
+
+        pw_valid = self.user.check_password(old_password)
+        # print('pw_valid:{}'.format(pw_valid))
+
+        if pw_valid:
+            return old_password
+        else:
+            msg = _('입력하신 패스워드가 맞지 않습니다. 패스워드를 다시 확인해 주세요.')
+            raise exceptions.ValidationError(msg)
+
+    def validate(self, attrs):
+        # print('attrs:{}'.format(attrs))
+        if attrs.get('password1') != attrs.get('password2'):
+            msg = _('새로 입력하신 패스워드가 동일하지 않습니다. 패스워드를 확인해 주세요.')
+            raise exceptions.ValidationError(msg)
+        if attrs.get('old_password') == attrs.get('password2'):
+            msg = _('패스워드가 기존 패스워드와 동일합니다. 패스워드를 변경해 주세요.')
+            raise exceptions.ValidationError(msg)
+        return attrs
+
+    def save(self, **kwargs):
+        # print('kwargs:{}'.format(kwargs))
+        new_password = kwargs.get('password')
+        # print('new_password:{}'.format(new_password))
+        # print('self.user:{}'.format(self.user))
+        self.user.set_password(new_password)
+        self.user.save()
